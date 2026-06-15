@@ -7,3 +7,5 @@
 #include "Constants.h"
 
 const int LOG_LEVEL = LOG_DEBUG;
+
+const int STRATEGY = STRAT_RANDOM;
