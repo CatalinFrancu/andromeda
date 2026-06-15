@@ -27,36 +27,51 @@ void Board::readFromStdin() {
 }
 
 void Board::print() {
-  Log::debug("======== side: %d", side);
-  printSeparatorLine();
+  printTopSeparatorLine();
 
   for (int r = 0; r < BOARD_SIZE; r++) {
-    std::string s = "|";
+    std::string s = "│";
     for (int c = 0; c < BOARD_SIZE; c++) {
       u64 mask = 1ll << (r * BOARD_SIZE + c);
-      s += " ";
-      if (piece[0] & mask) {
-        s += AnsiColors::PIECE[0];
-        s += "o";
-        s += AnsiColors::DEFAULT;
-      } else if (piece[1] & mask) {
-        s += AnsiColors::PIECE[1];
-        s += "o";
-        s += AnsiColors::DEFAULT;
+      if (empty & mask) {
+        s += "   ";
       } else {
-        s += " ";
+        const char* color = (piece[0] & mask)
+          ? AnsiColors::PIECE[0]
+          : AnsiColors::PIECE[1];
+        s += color;
+        s += " ⬤ ";
+        s += AnsiColors::DEFAULT;
       }
-      s += " |";
+      s += "│";
     }
     Log::debug(s.c_str());
-    printSeparatorLine();
+    if (r < BOARD_SIZE - 1) {
+      printMiddleSeparatorLine();
+    }
   }
+  printBottomSeparatorLine();
+  Log::debug("Side to move: %s⬤%s", AnsiColors::PIECE[side], AnsiColors::DEFAULT);
 }
 
-void Board::printSeparatorLine() {
-  std::string s = "+";
+void Board::printTopSeparatorLine() {
+  printSeparatorLine("┌", "┬", "┐");
+}
+
+void Board::printMiddleSeparatorLine() {
+  printSeparatorLine("├", "┼", "┤");
+}
+
+void Board::printBottomSeparatorLine() {
+  printSeparatorLine("└", "┴", "┘");
+}
+
+void Board::printSeparatorLine(const char* left, const char* center,
+                               const char* right) {
+  std::string s = left;
   for (int i = 0; i < BOARD_SIZE; i++) {
-    s += "---+";
+    s += "───";
+    s += (i < BOARD_SIZE - 1) ? center : right;
   }
   Log::debug(s.c_str());
 }

@@ -12,5 +12,9 @@ public:
   void print();
 
 private:
-  void printSeparatorLine();
+  void printTopSeparatorLine();
+  void printMiddleSeparatorLine();
+  void printBottomSeparatorLine();
+  void printSeparatorLine(const char* left, const char* center,
+                          const char* right);
 };
