@@ -4,8 +4,8 @@ An engine for the board game Ataxx.
 ## Installation
 
 ```bash
-git clone https://github.com/CatalinFrancu/onyx
-cd onyx/build
+git clone https://github.com/CatalinFrancu/andromeda
+cd andromeda/build
 cmake ..
 make
 ```
