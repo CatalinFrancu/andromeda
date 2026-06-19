@@ -149,9 +149,9 @@ int Board::finalEval() {
   if (us == them) {
     return 0;
   } else if (us > them) {
-    return WIN_SCORE + (us - them);
+    return WIN_SCORE + us;
   } else {
-    return -WIN_SCORE + (us - them);
+    return -WIN_SCORE - them;
   }
 }
 

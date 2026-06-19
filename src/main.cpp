@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
   scanf("%d %d", &time[0], &time[1]);
   int my_time = time[board.side];
   int remaining_moves = board.estimateRemainingMoves();
-  Log::debug("Time: %d milliseconds for an estimated %d moves.\n",
+  Log::debug("Time: %d milliseconds for an estimated %d moves.",
              my_time, remaining_moves);
 
   Move m;
@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     RandomAgent agent(&board);
     m = agent.getMove();
   } else if (STRATEGY == STRAT_ALPHA_BETA) {
-    AlphaBetaAgent agent(&board);
+    AlphaBetaAgent agent(&board, my_time / remaining_moves);
     m = agent.getMove();
   } else {
     Log::fatal("Unknown value STRATEGY = %d.", STRATEGY);

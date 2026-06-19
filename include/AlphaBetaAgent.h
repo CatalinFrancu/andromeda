@@ -6,16 +6,21 @@
 
 class AlphaBetaAgent {
 public:
-  Board* board;
-
-  AlphaBetaAgent(Board* board);
+  AlphaBetaAgent(Board* board, int time);
   Move getMove();
 
 private:
-  Move moves[MAX_ALPHA_BETA_DEPTH + 1][MAX_MOVES];
-  u64 posCount, moveCount;
+  Board* board;
+  int time; // time remaining for this move, in milliseconds
+  int millis, prevMillis; // time used for the previous two iterations
+  u64 posCount, prevPosCount; // positions seen at the previous two iterations
+  u64 moveCount; // number of calls to the move generator
 
-  void alphaBetaWrapper(int depth, Move& move, int& score);
+  Move moves[MAX_ALPHA_BETA_DEPTH + 1][MAX_MOVES];
+
+  Move iterativeDeepening();
+  bool haveTime();
+  void alphaBetaWrapper(int depth, int numMoves, Move& move, int& score);
   int alphaBeta(Board b, int depth, int alpha, int beta);
-  void logStats(int depth, int score);
+  void logStats(int depth, int score, int millis);
 };
