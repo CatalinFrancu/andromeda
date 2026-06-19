@@ -1,3 +1,4 @@
+#include "AlphaBetaAgent.h"
 #include "Board.h"
 #include "Config.h"
 #include "Log.h"
@@ -5,26 +6,32 @@
 #include "RandomAgent.h"
 
 int main(int argc, char** argv) {
-  Board::precomputeJumpDomains();
+  Board::precomputeDomains();
 
   Board board;
   board.readFromStdin();
   board.print();
+
+  int time[2];
+  scanf("%d %d", &time[0], &time[1]);
+  int my_time = time[board.side];
+  int remaining_moves = board.estimateRemainingMoves();
+  Log::debug("Time: %d milliseconds for an estimated %d moves.\n",
+             my_time, remaining_moves);
 
   Move m;
 
   if (STRATEGY == STRAT_RANDOM) {
     RandomAgent agent(&board);
     m = agent.getMove();
+  } else if (STRATEGY == STRAT_ALPHA_BETA) {
+    AlphaBetaAgent agent(&board);
+    m = agent.getMove();
   } else {
     Log::fatal("Unknown value STRATEGY = %d.", STRATEGY);
   }
 
-  switch(m.type) {
-    case M_PASS: printf("0\n"); break;
-    case M_CLONE: printf("1 %d\n", m.dest); break;
-    case M_JUMP: printf("2 %d %d\n", m.src, m.dest); break;
-  }
+  printf("%s\n", m.toString().c_str());
 
   return 0;
 }

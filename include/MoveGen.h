@@ -11,6 +11,7 @@ public:
 
   MoveGen(Board* board, Move* moves);
   void run();
+  void randomizeMoves(); // After generating them!
 
 private:
   void genClones();

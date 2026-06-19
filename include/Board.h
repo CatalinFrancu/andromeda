@@ -6,23 +6,35 @@
 
 class Board {
 public:
-  // For every square, precompute the squares at distance 2.
+  // For every square, precompute the squares at distances 1 and 2.
+  static const int CLONE_DELTA[8][2];
+  static const int JUMP_DELTA[16][2];
+  static u64 cloneDomains[BOARD_SIZE * BOARD_SIZE];
   static u64 jumpDomains[BOARD_SIZE * BOARD_SIZE];
 
   u64 pieces[2];
   u64 empty;
   bool side;
 
-  static void precomputeJumpDomains();
+  static void precomputeDomains();
 
   void readFromStdin();
   void print();
-  std::string translateMove(Move m);
+
+  void makeMove(Move m);
+  int eval();
+
+  // Returns the score of a position known to be final (no moves).
+  int finalEval();
 
   int getNumPiecesToMove();
   int getNumEmpty();
 
+  int estimateRemainingMoves();
+
 private:
+  static void precomputeTypeDomains(const int (*delta)[2], int count, u64* dest);
+
   void printTopSeparatorLine();
   void printMiddleSeparatorLine();
   void printBottomSeparatorLine();

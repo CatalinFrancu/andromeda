@@ -8,4 +8,8 @@
 
 const int LOG_LEVEL = LOG_DEBUG;
 
-const int STRATEGY = STRAT_RANDOM;
+// Fraction of moves that are clones. We use this to estimate the number of
+// remaining moves, which dictates time management.
+const double FRACTION_CLONES = 0.75;
+
+const int STRATEGY = STRAT_ALPHA_BETA;

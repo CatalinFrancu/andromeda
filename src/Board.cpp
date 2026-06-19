@@ -1,29 +1,44 @@
 #include "Board.h"
 
 #include "AnsiColors.h"
+#include "Config.h"
 #include "Log.h"
 #include <stdio.h>
 #include <sstream>
 #include <string>
 
+const int Board::CLONE_DELTA[8][2] = {
+  {-1, -1}, {-1, 0}, {-1, +1},
+  {0, -1}, {0, +1},
+  {+1, -1}, {+1, 0}, {+1, +1},
+};
+
+const int Board::JUMP_DELTA[16][2] = {
+  {-2, -2}, {-2, -1}, {-2, 0}, {-2, +1}, {-2, +2},
+  {-1, -2}, {-1, +2},
+  {0, -2}, {0, +2},
+  {+1, -2}, {+1, +2},
+  {+2, -2}, {+2, -1}, {+2, 0}, {+2, +1}, {+2, +2},
+};
+
+u64 Board::cloneDomains[BOARD_SIZE * BOARD_SIZE];
 u64 Board::jumpDomains[BOARD_SIZE * BOARD_SIZE];
 
-void Board::precomputeJumpDomains() {
-  const int DELTA[16][2] = {
-    {-2, -2}, {-2, -1}, {-2, 0}, {-2, +1}, {-2, +2},
-    {-1, -2}, {-1, +2},
-    {0, -2}, {0, +2},
-    {+1, -2}, {+1, +2},
-    {+2, -2}, {+2, -1}, {+2, 0}, {+2, +1}, {+2, +2} };
+void Board::precomputeDomains() {
+  precomputeTypeDomains(Board::CLONE_DELTA, 8, Board::cloneDomains);
+  precomputeTypeDomains(Board::JUMP_DELTA, 16, Board::jumpDomains);
+}
+
+void Board::precomputeTypeDomains(const int (*delta)[2], int count, u64* dest) {
   for (int r = 0; r < BOARD_SIZE; r++) {
     for (int c = 0; c < BOARD_SIZE; c++) {
       int bit = r * BOARD_SIZE + c;
-      for (int i = 0; i < 16; i++) {
-        int r2 = r + DELTA[i][0];
-        int c2 = c + DELTA[i][1];
+      for (int i = 0; i < count; i++) {
+        int r2 = r + delta[i][0];
+        int c2 = c + delta[i][1];
         if ((r2 >= 0) && (r2 < BOARD_SIZE) &&
             (c2 >= 0) && (c2 < BOARD_SIZE)) {
-          jumpDomains[bit] |= 1ll << (r2 * BOARD_SIZE + c2);
+          dest[bit] |= 1ll << (r2 * BOARD_SIZE + c2);
         }
       }
     }
@@ -52,10 +67,13 @@ void Board::readFromStdin() {
 }
 
 void Board::print() {
+  Log::debug("    a   b   c   d   e   f   g");
   printTopSeparatorLine();
 
   for (int r = 0; r < BOARD_SIZE; r++) {
-    std::string s = "│";
+    std::string s;
+    s = (char)('1' + r);
+    s += " │";
     for (int c = 0; c < BOARD_SIZE; c++) {
       u64 mask = 1ll << (r * BOARD_SIZE + c);
       if (empty & mask) {
@@ -93,12 +111,48 @@ void Board::printBottomSeparatorLine() {
 
 void Board::printSeparatorLine(const char* left, const char* center,
                                const char* right) {
-  std::string s = left;
+  std::string s = "  ";
+  s += left;
   for (int i = 0; i < BOARD_SIZE; i++) {
     s += "───";
     s += (i < BOARD_SIZE - 1) ? center : right;
   }
   Log::debug(s.c_str());
+}
+
+void Board::makeMove(Move m) {
+  if (m.type == M_JUMP) {
+    // Clear the source.
+    pieces[side] ^= 1ll << m.src;
+    empty ^= 1ll << m.src;
+  }
+
+  // Fill the destination.
+  pieces[side] ^= 1ll << m.dest;
+  empty ^= 1ll << m.dest;
+
+  // Flip the neighbors.
+  pieces[side] |= pieces[!side] & cloneDomains[m.dest];
+  pieces[!side] &= ~cloneDomains[m.dest];
+
+  side = !side;
+}
+
+int Board::eval() {
+  return __builtin_popcountll(pieces[side]) - __builtin_popcountll(pieces[!side]);
+}
+
+int Board::finalEval() {
+  // The side to move has no move. The other side gets all the empty squares.
+  int us = __builtin_popcountll(pieces[side]);
+  int them = __builtin_popcountll(pieces[!side]) + __builtin_popcountll(empty);
+  if (us == them) {
+    return 0;
+  } else if (us > them) {
+    return WIN_SCORE + (us - them);
+  } else {
+    return -WIN_SCORE + (us - them);
+  }
 }
 
 int Board::getNumPiecesToMove() {
@@ -107,4 +161,8 @@ int Board::getNumPiecesToMove() {
 
 int Board::getNumEmpty() {
   return __builtin_popcountll(empty);
+}
+
+int Board::estimateRemainingMoves() {
+  return getNumEmpty() / FRACTION_CLONES;
 }

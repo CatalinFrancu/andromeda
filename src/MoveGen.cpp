@@ -1,6 +1,7 @@
 #include "MoveGen.h"
 
 #include "Log.h"
+#include "Util.h"
 #include <algorithm>
 
 MoveGen::MoveGen(Board* board, Move* moves) {
@@ -67,6 +68,10 @@ void MoveGen::genJumpsFromDest() {
   }
 }
 
+void MoveGen::randomizeMoves() {
+  std::shuffle(moves, moves + numMoves, Util::rng);
+}
+
 void MoveGen::addNullMove() {
   if (!numMoves) {
     pushMove(M_PASS, 0, 0);
@@ -78,5 +83,5 @@ void MoveGen::pushMove(u8 type, u8 src, u8 dest) {
   m.type = type;
   m.src = src;
   m.dest = dest;
-  Log::debug("pushed move #%d %s", numMoves - 1, m.toString().c_str());
+  // Log::debug("pushed move #%d %s", numMoves - 1, m.toString().c_str());
 }
