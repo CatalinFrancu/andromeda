@@ -25,7 +25,6 @@ const int WIN_SCORE = 1'000'000;
 // More than winning 49-0.
 const int INFTY = WIN_SCORE + BOARD_SIZE * BOARD_SIZE + 1;
 
-const int M_PASS = 0;
 const int M_CLONE = 1;
 const int M_JUMP = 2;
 

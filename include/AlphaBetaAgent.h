@@ -17,4 +17,5 @@ private:
 
   void alphaBetaWrapper(int depth, Move& move, int& score);
   int alphaBeta(Board b, int depth, int alpha, int beta);
+  void logStats(int depth, int score);
 };

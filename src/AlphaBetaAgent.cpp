@@ -40,8 +40,7 @@ void AlphaBetaAgent::alphaBetaWrapper(int depth, Move& move, int& score) {
     }
   }
 
-  Log::info("depth %d    score %d    %llu positions    %llu moves",
-            depth, score, posCount, moveCount);
+  logStats(depth, score);
 }
 
 int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
@@ -72,4 +71,19 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
   }
 
   return alpha;
+}
+
+void AlphaBetaAgent::logStats(int depth, int score) {
+  if (score >= WIN_SCORE) {
+    Log::info("depth %d    score win(%d-%d)    %llu positions    %llu moves",
+              depth, score - WIN_SCORE, BOARD_SIZE * BOARD_SIZE - (score - WIN_SCORE),
+              posCount, moveCount);
+  } else if (score <= -WIN_SCORE) {
+    Log::info("depth %d    score lose(%d-%d)    %llu positions    %llu moves",
+              depth, BOARD_SIZE * BOARD_SIZE + score + WIN_SCORE, -score - WIN_SCORE,
+              posCount, moveCount);
+  } else {
+    Log::info("depth %d    score %d    %llu positions    %llu moves",
+              depth, score, posCount, moveCount);
+  }
 }

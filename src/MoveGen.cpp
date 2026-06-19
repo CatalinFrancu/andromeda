@@ -13,7 +13,6 @@ MoveGen::MoveGen(Board* board, Move* moves) {
 void MoveGen::run() {
   genClones();
   genJumps();
-  addNullMove();
 }
 
 void MoveGen::genClones() {
@@ -70,12 +69,6 @@ void MoveGen::genJumpsFromDest() {
 
 void MoveGen::randomizeMoves() {
   std::shuffle(moves, moves + numMoves, Util::rng);
-}
-
-void MoveGen::addNullMove() {
-  if (!numMoves) {
-    pushMove(M_PASS, 0, 0);
-  }
 }
 
 void MoveGen::pushMove(u8 type, u8 src, u8 dest) {

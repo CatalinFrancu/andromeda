@@ -19,8 +19,5 @@ private:
   void genJumpsFromSrc();
   void genJumpsFromDest();
 
-  // When there are no other moves.
-  void addNullMove();
-
   void pushMove(u8 type, u8 src, u8 dest);
 };
