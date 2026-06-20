@@ -23,7 +23,7 @@ Move AlphaBetaAgent::iterativeDeepening() {
 
   // Randomize the moves at the first level so that the agent picks a random
   // choice from among equals.
-  MoveGen moveGen(board, moves[depth]);
+  MoveGen moveGen(board, moves[0]);
   moveGen.run();
   moveGen.randomizeMoves();
   moveCount++;
@@ -61,7 +61,7 @@ void AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, Move& move, int& 
   score = -INFTY;
 
   for (int i = 0; i < numMoves; i++) {
-    Move m = moves[depth][i];
+    Move m = moves[0][i];
     Board new_b = *board;
     new_b.makeMove(m);
     int child = -alphaBeta(new_b, depth - 1, -INFTY, -score);
