@@ -34,6 +34,7 @@ Move AlphaBetaAgent::iterativeDeepening() {
     posCount = moveCount = 0;
     Time::startClock();
     alphaBetaWrapper(++depth, moveGen.numMoves, move, score);
+    putMoveFirst(move);
     millis = Time::stopClock();
     time -= millis;
     logStats(depth, score, millis);
@@ -102,6 +103,19 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
   }
 
   return alpha;
+}
+
+void AlphaBetaAgent::putMoveFirst(Move move) {
+  int i = 0;
+  while (moves[0][i] != move) {
+    i++;
+  }
+
+  Log::debug("Interschimb %s cu %s", moves[0][0].toString().c_str(),
+             moves[0][i].toString().c_str());
+  Move tmp = moves[0][0];
+  moves[0][0] = moves[0][i];
+  moves[0][i] = tmp;
 }
 
 void AlphaBetaAgent::logStats(int depth, int score, int millis) {

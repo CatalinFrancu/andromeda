@@ -9,4 +9,5 @@ public:
   u8 src, dest;
 
   std::string toString();
+  friend bool operator==(const Move& a, const Move& b);
 };
