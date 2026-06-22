@@ -18,6 +18,25 @@ const u64 BOTTOM_ROW = 0b1111111'0000000'0000000'0000000'0000000'0000000'0000000
 const int MAX_MOVES = 1'000; // TBD
 const int MAX_ALPHA_BETA_DEPTH = 50; // Something that will never be exceeded
 
+// Board evaluation constants.
+const int POP_COEF = 100; // Coefficient of the pure piece count.
+const int BOARD_COEFS[BOARD_SIZE * BOARD_SIZE] = {
+  /* 8,  2,  1,  1,  1,  2, 8, */
+  /* 2,  1,  0,  0,  0,  1, 2, */
+  /* 1,  0, -1, -1, -1,  0, 1, */
+  /* 1,  0, -1, -2, -1,  0, 1, */
+  /* 1,  0, -1, -1, -1,  0, 1, */
+  /* 2,  1,  0,  0,  0,  1, 2, */
+  /* 8,  2,  1,  1,  1,  2, 8, */
+  20, 5, 5, 5, 5, 5, 20,
+  5, 1, 1, 1, 1, 1, 5,
+  5, 1, 8, 5, 8, 1, 5,
+  5, 1, 5, 8, 5, 1, 5,
+  5, 1, 8, 5, 8, 1, 5,
+  5, 1, 1, 1, 1, 1, 5,
+  20, 5, 5, 5, 5, 5, 20,
+};
+
 // Base score for winning / losing a game. We add the piece difference on
 // top of this.
 const int WIN_SCORE = 1'000'000;

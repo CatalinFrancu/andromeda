@@ -125,21 +125,32 @@ void Board::makeMove(Move m) {
     // Clear the source.
     pieces[side] ^= 1ll << m.src;
     empty ^= 1ll << m.src;
+    boardCoefs[side] -= BOARD_COEFS[m.src];
   }
 
   // Fill the destination.
   pieces[side] ^= 1ll << m.dest;
   empty ^= 1ll << m.dest;
+  boardCoefs[side] += BOARD_COEFS[m.dest];
 
   // Flip the neighbors.
-  pieces[side] |= pieces[!side] & cloneDomains[m.dest];
-  pieces[!side] &= ~cloneDomains[m.dest];
+  u64 opp_neighbors = pieces[!side] & cloneDomains[m.dest];
+  pieces[side] ^= opp_neighbors;
+  pieces[!side] ^= opp_neighbors;
+  for (u64 x = opp_neighbors; x; x &= (x - 1)) {
+    int sq = __builtin_ctzll(x);
+    boardCoefs[!side] -= BOARD_COEFS[sq];
+    boardCoefs[side] += BOARD_COEFS[sq];
+  }
 
   side = !side;
 }
 
 int Board::eval() {
-  return __builtin_popcountll(pieces[side]) - __builtin_popcountll(pieces[!side]);
+  int delta = __builtin_popcountll(pieces[side]) - __builtin_popcountll(pieces[!side]);
+  return
+    delta * POP_COEF +
+    (boardCoefs[side] - boardCoefs[!side]);
 }
 
 int Board::finalEval() {
