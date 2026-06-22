@@ -25,6 +25,9 @@ public:
   void makeMove(Move m);
   int eval();
 
+  // Counts the pairs of adjacent pieces of a given player.
+  int groupEval(bool side);
+
   // Returns the score of a position known to be final (no moves).
   int finalEval();
 

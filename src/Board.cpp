@@ -150,7 +150,20 @@ int Board::eval() {
   int delta = __builtin_popcountll(pieces[side]) - __builtin_popcountll(pieces[!side]);
   return
     delta * POP_COEF +
-    (boardCoefs[side] - boardCoefs[!side]);
+    (boardCoefs[side] - boardCoefs[!side]) +
+    (groupEval(side) - groupEval(-side)) * GROUP_COEF;
+}
+
+int Board::groupEval(bool side) {
+  u64 m = pieces[side];
+
+  // There's no point in counting the same pair twice, so we only look for
+  // neighbors in four directions: W, NW, N and NE.
+  return
+    __builtin_popcountll(m & ((m & ~LEFT_COL) >> 1)) +
+    __builtin_popcountll(m & ((m & ~TOP_ROW & ~LEFT_COL) >> (BOARD_SIZE + 1))) +
+    __builtin_popcountll(m & ((m & ~TOP_ROW) >> BOARD_SIZE)) +
+    __builtin_popcountll(m & ((m & ~TOP_ROW & ~RIGHT_COL) >> (BOARD_SIZE - 1)));
 }
 
 int Board::finalEval() {
@@ -175,7 +188,10 @@ int Board::getNumEmpty() {
 }
 
 int Board::estimateRemainingMoves() {
-  return getNumEmpty() / FRACTION_CLONES;
+  // Divide in 2 because the opponent can also create clones and drive the
+  // game forward.
+  int n = getNumEmpty() / (2 * FRACTION_CLONES);
+  return (n < 1) ? 1 : n;
 }
 
 u64 Board::getHashCode() {
