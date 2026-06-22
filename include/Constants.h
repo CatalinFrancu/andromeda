@@ -31,6 +31,19 @@ const int M_JUMP = 2;
 const int STRAT_RANDOM = 0;
 const int STRAT_ALPHA_BETA = 1;
 
+// Board hash code constants.
+const u64 HASH1 = 0xce2d'8606'6491'af5cull;
+const u64 HASH2 = 0xfb5e'bf76'a2a6'3120ull;
+const u64 HASH3 = 0x71c8'203d'77eb'd4a4ull;
+const u64 HASH4 = 0x272f'1a00'9462'4efeull;
+
+// Transposition table constants.
+const int TT_UNKNOWN = 0;
+const int TT_EXACT = 1;
+const int TT_LOWER_BOUND = 2;
+const int TT_UPPER_BOUND = 3;
+
+// Logging constants.
 const int LOG_FATAL = 0;
 const int LOG_ERROR = 1;
 const int LOG_WARN = 2;

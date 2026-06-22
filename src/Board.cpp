@@ -166,3 +166,11 @@ int Board::getNumEmpty() {
 int Board::estimateRemainingMoves() {
   return getNumEmpty() / FRACTION_CLONES;
 }
+
+u64 Board::getHashCode() {
+  return
+    pieces[0] * HASH1 +
+    pieces[1] * HASH2 +
+    empty * HASH3 +
+    side * HASH4;
+}

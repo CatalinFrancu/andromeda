@@ -32,6 +32,8 @@ public:
 
   int estimateRemainingMoves();
 
+  u64 getHashCode();
+
 private:
   static void precomputeTypeDomains(const int (*delta)[2], int count, u64* dest);
 

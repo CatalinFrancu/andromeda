@@ -31,7 +31,7 @@ Move AlphaBetaAgent::iterativeDeepening() {
   do {
     prevMillis = millis;
     prevPosCount = posCount;
-    posCount = moveCount = 0;
+    posCount = moveCount = tt_cutoffs = 0;
     Time::startClock();
     alphaBetaWrapper(++depth, moveGen.numMoves, move, score);
     putMoveFirst(move);
@@ -81,6 +81,16 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     return b.eval();
   }
 
+  u64 hash = b.getHashCode();
+  TranspositionRecord rec = tt.probe(hash);
+  if ((rec.depth >= depth) &&
+      ((rec.type == TT_EXACT) ||
+       ((rec.type == TT_LOWER_BOUND) && (rec.score >= beta)) ||
+       ((rec.type == TT_UPPER_BOUND) && (rec.score < alpha)))) {
+    tt_cutoffs++;
+    return rec.score;
+  }
+
   MoveGen moveGen(&b, moves[depth]);
   moveGen.run();
   moveCount++;
@@ -89,6 +99,7 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     return b.finalEval();
   }
 
+  u8 type = TT_UPPER_BOUND;
   for (int i = 0; i < moveGen.numMoves; i++) {
     Move m = moves[depth][i];
     Board new_b = b;
@@ -96,12 +107,15 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     int child = -alphaBeta(new_b, depth - 1, -beta, -alpha);
 
     if (child >= beta) {
+      tt.add(hash, child, depth, TT_LOWER_BOUND);
       return beta;
     } else if (child > alpha) {
+      type = TT_EXACT;
       alpha = child;
     }
   }
 
+  tt.add(hash, alpha, depth, type);
   return alpha;
 }
 
@@ -133,6 +147,6 @@ void AlphaBetaAgent::logStats(int depth, int score, int millis) {
     sprintf(s, "%d", score);
   }
 
-  Log::info("depth %d:    %d millis    score %s    %llu positions    %llu calls to movegen",
-            depth, millis, s, posCount, moveCount);
+  Log::info("depth %d:    %d millis    score %s    %llu positions    %llu calls to movegen    %llu tt cutoffs",
+            depth, millis, s, posCount, moveCount, tt_cutoffs);
 }
