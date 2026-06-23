@@ -19,7 +19,7 @@ const int MAX_MOVES = 1'000; // TBD
 const int MAX_ALPHA_BETA_DEPTH = 50; // Something that will never be exceeded
 
 // Board evaluation constants.
-const int POP_COEF = 100;  // Coefficient of the pure piece count.
+const int POP_COEF = 10;   // Coefficient of the pure piece count.
 const int GROUP_COEF = 0;  // Coefficient of pairs of neighboring pieces.
 const int BOARD_COEFS[BOARD_SIZE * BOARD_SIZE] = {
   20, 5, 5, 5, 5, 5, 20,
