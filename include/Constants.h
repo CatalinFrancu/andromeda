@@ -19,16 +19,9 @@ const int MAX_MOVES = 1'000; // TBD
 const int MAX_ALPHA_BETA_DEPTH = 50; // Something that will never be exceeded
 
 // Board evaluation constants.
-const int POP_COEF = 100;  // Coefficient of the pure piece count.
-const int GROUP_COEF = 1;  // Coefficient of pairs of neighboring pieces.
+const int POP_COEF = 10000;  // Coefficient of the pure piece count.
+const int GROUP_COEF = 0;  // Coefficient of pairs of neighboring pieces.
 const int BOARD_COEFS[BOARD_SIZE * BOARD_SIZE] = {
-  /* 8,  2,  1,  1,  1,  2, 8, */
-  /* 2,  1,  0,  0,  0,  1, 2, */
-  /* 1,  0, -1, -1, -1,  0, 1, */
-  /* 1,  0, -1, -2, -1,  0, 1, */
-  /* 1,  0, -1, -1, -1,  0, 1, */
-  /* 2,  1,  0,  0,  0,  1, 2, */
-  /* 8,  2,  1,  1,  1,  2, 8, */
   20, 5, 5, 5, 5, 5, 20,
   5, 1, 1, 1, 1, 1, 5,
   5, 1, 8, 5, 8, 1, 5,
@@ -47,6 +40,12 @@ const int INFTY = WIN_SCORE + BOARD_SIZE * BOARD_SIZE + 1;
 
 const int M_CLONE = 1;
 const int M_JUMP = 2;
+
+// Move generation constants.
+
+// Iff this is true, we allow jumps to destinations that we can also reach via
+// cloning.
+const bool ALLOW_JUMPS_OVER_CLONES = true;
 
 const int STRAT_RANDOM = 0;
 const int STRAT_ALPHA_BETA = 1;

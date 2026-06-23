@@ -14,6 +14,10 @@ public:
   void randomizeMoves(); // After generating them!
 
 private:
+  u64 cloneMask; // squares where we can clone
+  u64 jumpMask;  // squares where we can jump
+
+  void genMasks();
   void genClones();
   void genJumps();
   void genJumpsFromSrc();

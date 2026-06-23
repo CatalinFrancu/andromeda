@@ -11,20 +11,29 @@ MoveGen::MoveGen(Board* board, Move* moves) {
 }
 
 void MoveGen::run() {
+  genMasks();
   genClones();
   genJumps();
 }
 
+void MoveGen::genMasks() {
+  cloneMask = board->pieces[board->side];
+  cloneMask |= (cloneMask & ~LEFT_COL) >> 1;
+  cloneMask |= (cloneMask & ~RIGHT_COL) << 1;
+  cloneMask |= (cloneMask & ~TOP_ROW) >> BOARD_SIZE;
+  cloneMask |= (cloneMask & ~BOTTOM_ROW) << BOARD_SIZE;
+  cloneMask &= board->empty;
+
+  jumpMask = ALLOW_JUMPS_OVER_CLONES
+    ? board->empty
+    : (board->empty & ~cloneMask);
+}
+
 void MoveGen::genClones() {
-  u64 mask = board->pieces[board->side];
-  mask |= (mask & ~LEFT_COL) >> 1;
-  mask |= (mask & ~RIGHT_COL) << 1;
-  mask |= (mask & ~TOP_ROW) >> BOARD_SIZE;
-  mask |= (mask & ~BOTTOM_ROW) << BOARD_SIZE;
-  mask &= board->empty;
-  while (mask) {
-    int bit = __builtin_ctzll(mask);
-    mask ^= 1ll << bit;
+  u64 m = cloneMask;
+  while (m) {
+    int bit = __builtin_ctzll(m);
+    m ^= 1ll << bit;
     pushMove(M_CLONE, 0, bit);
   }
 }
@@ -43,7 +52,7 @@ void MoveGen::genJumpsFromSrc() {
   while (src) {
     int sbit = __builtin_ctzll(src);
     src ^= 1ll << sbit;
-    u64 dest = Board::jumpDomains[sbit] & board->empty;
+    u64 dest = Board::jumpDomains[sbit] & jumpMask;
     while (dest) {
       int dbit = __builtin_ctzll(dest);
       dest ^= 1ll << dbit;
@@ -54,7 +63,7 @@ void MoveGen::genJumpsFromSrc() {
 
 // Preferable when the number of destinations (empty squares) is small.
 void MoveGen::genJumpsFromDest() {
-  u64 dest = board->empty;
+  u64 dest = jumpMask;
   while (dest) {
     int dbit = __builtin_ctzll(dest);
     dest ^= 1ll << dbit;

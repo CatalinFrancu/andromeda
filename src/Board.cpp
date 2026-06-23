@@ -54,12 +54,21 @@ void Board::readFromStdin() {
 
   for (int r = 0; r < BOARD_SIZE; r++) {
     for (int c = 0; c < BOARD_SIZE; c++) {
-      u64 mask = 1ll << (r * BOARD_SIZE + c);
+      int bit = r * BOARD_SIZE + c;
+      u64 mask = 1ll << bit;
       char ch = getchar();
       switch (ch) {
-        case 'x': pieces[0] |= mask; break;
-        case 'o': pieces[1] |= mask; break;
-        case '.': empty |= mask; break;
+        case 'x':
+          pieces[0] |= mask;
+          boardCoefs[0] += BOARD_COEFS[bit];
+          break;
+        case 'o':
+          pieces[1] |= mask;
+          boardCoefs[1] += BOARD_COEFS[bit];
+          break;
+        case '.':
+          empty |= mask;
+          break;
       }
     }
     getchar(); // '\n'
@@ -95,6 +104,13 @@ void Board::print() {
   }
   printBottomSeparatorLine();
   Log::debug("Side to move: %s⬤%s", AnsiColors::PIECE[side], AnsiColors::DEFAULT);
+  Log::debug("popcount %d/%d coefs %d/%d group %d/%d",
+             __builtin_popcountll(pieces[side]),
+             __builtin_popcountll(pieces[!side]),
+             boardCoefs[side],
+             boardCoefs[!side],
+             groupEval(side),
+             groupEval(!side));
 }
 
 void Board::printTopSeparatorLine() {
@@ -151,7 +167,7 @@ int Board::eval() {
   return
     delta * POP_COEF +
     (boardCoefs[side] - boardCoefs[!side]) +
-    (groupEval(side) - groupEval(-side)) * GROUP_COEF;
+    (groupEval(side) - groupEval(!side)) * GROUP_COEF;
 }
 
 int Board::groupEval(bool side) {
