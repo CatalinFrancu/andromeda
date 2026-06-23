@@ -1,0 +1,55 @@
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_50     10        8.0      243
+stable     10        2.0      247
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_60     10        6.0      248
+stable     10        4.0      242
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_70     10        5.0      248
+stable     10        5.0      242
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_80     10        7.0      256
+stable     10        3.0      234
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        7.0      250
+dev_90     10        3.0      240
+
+Nume     Partide    Puncte    Piese
+-----------------------------------
+dev_100     10        6.0      251
+stable      10        4.0      239
+
+Nume     Partide    Puncte    Piese
+-----------------------------------
+stable      10        7.0      248
+dev_110     10        3.0      242
+
+Nume     Partide    Puncte    Piese
+-----------------------------------
+stable      10        7.0      248
+dev_120     10        3.0      242
+
+Nume     Partide    Puncte    Piese
+-----------------------------------
+stable      10        6.0      252
+dev_130     10        4.0      238
+
+Nume     Partide    Puncte    Piese
+-----------------------------------
+dev_140     10        8.0      252
+stable      10        2.0      238
+
+Nume     Partide    Puncte    Piese
+-----------------------------------
+dev_150     10        6.0      246
+stable      10        4.0      244
+

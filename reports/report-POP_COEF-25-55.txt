@@ -1,0 +1,35 @@
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_25     10        7.0      249
+stable     10        3.0      241
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        5.0      245
+dev_30     10        5.0      245
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_35     10        6.0      225
+stable     10        4.0      241
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_40     10        6.0      245
+stable     10        4.0      245
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        6.0      247
+dev_45     10        4.0      243
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_50     10        5.0      247
+stable     10        5.0      219
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_55     10        7.0      249
+stable     10        3.0      217
+
