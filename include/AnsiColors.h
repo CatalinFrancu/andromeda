@@ -9,6 +9,7 @@ public:
   static const char ERROR[10];
   static const char WARN[10];
   static const char SUCCESS[10];
+  static const char NOTICE[10];
   static const char INFO[10];
   static const char DEBUG[10];
 

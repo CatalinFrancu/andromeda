@@ -46,6 +46,13 @@ void Log::info(const char* fmt, ...) {
   va_end(args);
 }
 
+void Log::notice(const char* fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  write(LOG_INFO, AnsiColors::NOTICE, fmt, args);
+  va_end(args);
+}
+
 void Log::debug(const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);

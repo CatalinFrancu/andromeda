@@ -85,7 +85,7 @@ bool AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, Move& move, int& 
   }
 
   if (i < numMoves) {
-    Log::warning("alpha-beta ran out of time");
+    Log::notice("alpha-beta ran out of time mid-iteration");
     return false;
   } else {
     return true;

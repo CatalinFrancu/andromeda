@@ -7,6 +7,7 @@ public:
   static void fatal(const char* fmt, ...);
   static void error(const char* fmt, ...);
   static void warning(const char* fmt, ...);
+  static void notice(const char* fmt, ...);
   static void success(const char* fmt, ...);
   static void info(const char* fmt, ...);
   static void debug(const char* fmt, ...);
