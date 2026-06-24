@@ -28,24 +28,32 @@ Move AlphaBetaAgent::iterativeDeepening() {
   moveGen.randomizeMoves();
   moveCount++;
 
+  // Stop either when the current iteration exceeds the time or when we
+  // estimate that the next iteration would be too slow.
   do {
     prevMillis = millis;
     prevPosCount = posCount;
     posCount = moveCount = tt_cutoffs = 0;
     Time::startClock();
-    alphaBetaWrapper(++depth, moveGen.numMoves, move, score);
-    putMoveFirst(move);
-    millis = Time::stopClock();
+    bool inTime = alphaBetaWrapper(++depth, moveGen.numMoves, move, score);
+    millis = Time::checkClock();
     time -= millis;
-    logStats(depth, score, millis);
+    if (inTime) {
+      putMoveFirst(move);
+      logStats(depth, score, millis);
+    }
   } while ((score > -WIN_SCORE) && (score < WIN_SCORE) && haveTime());
 
-  return move;
+  return moves[0][0];
 }
 
 bool AlphaBetaAgent::haveTime() {
   if (!prevMillis || !millis) {
     return true;
+  }
+
+  if (time <= 0) {
+    return false;
   }
 
   // Extrapolate the duration of the next iteration. Be conservative as it may
@@ -58,10 +66,11 @@ bool AlphaBetaAgent::haveTime() {
   return (int)nextMillis <= time * 9 / 10;
 }
 
-void AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, Move& move, int& score) {
+bool AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, Move& move, int& score) {
   score = -INFTY;
 
-  for (int i = 0; i < numMoves; i++) {
+  int i = 0;
+  while ((i < numMoves) && (Time::checkClock() < (unsigned)time)) {
     Move m = moves[0][i];
     Board new_b = *board;
     new_b.makeMove(m);
@@ -72,6 +81,14 @@ void AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, Move& move, int& 
       score = child;
       move = m;
     }
+    i++;
+  }
+
+  if (i < numMoves) {
+    Log::warning("alpha-beta ran out of time");
+    return false;
+  } else {
+    return true;
   }
 }
 
@@ -125,8 +142,6 @@ void AlphaBetaAgent::putMoveFirst(Move move) {
     i++;
   }
 
-  Log::debug("Interschimb %s cu %s", moves[0][0].toString().c_str(),
-             moves[0][i].toString().c_str());
   Move tmp = moves[0][0];
   moves[0][0] = moves[0][i];
   moves[0][i] = tmp;

@@ -7,7 +7,7 @@ public:
   static void startClock();
 
   // returns the number of milliseconds elapsed since startClock()
-  static u64 stopClock();
+  static u64 checkClock();
 
 private:
   static u64 t0;

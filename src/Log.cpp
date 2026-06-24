@@ -25,7 +25,7 @@ void Log::error(const char* fmt, ...) {
   va_end(args);
 }
 
-void Log::warn(const char* fmt, ...) {
+void Log::warning(const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);
   write(LOG_WARN, AnsiColors::WARN, fmt, args);

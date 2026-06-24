@@ -8,7 +8,7 @@ void Time::startClock() {
   t0 = getTimeMillis();
 }
 
-u64 Time::stopClock() {
+u64 Time::checkClock() {
   return getTimeMillis() - t0;
 }
 
