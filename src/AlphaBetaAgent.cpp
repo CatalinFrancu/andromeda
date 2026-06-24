@@ -1,5 +1,6 @@
 #include "AlphaBetaAgent.h"
 
+#include "Config.h"
 #include "Log.h"
 #include "MoveGen.h"
 #include "Time.h"
@@ -169,6 +170,6 @@ void AlphaBetaAgent::logStats(int depth, int score, int millis) {
 
   Log::info("depth %d:    %d millis    score %s    %llu positions    %llu calls to movegen    %llu tt cutoffs",
             depth, millis, s, posCount, moveCount, tt_cutoffs);
-  fprintf(stderr, "kibitz depth %d / score %s / %llu positions / %llu calls to movegen / %llu tt cutoffs\n",
-            depth, s, posCount, moveCount, tt_cutoffs);
+  fprintf(stderr, "kibitz [%s] depth %d / score %s / %llu positions / %llu calls to movegen / %llu tt cutoffs\n",
+          ENGINE_NAME, depth, s, posCount, moveCount, tt_cutoffs);
 }

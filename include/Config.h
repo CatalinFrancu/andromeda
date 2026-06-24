@@ -6,6 +6,8 @@
 
 #include "Constants.h"
 
+const char ENGINE_NAME[100] = "andromeda";
+
 const int LOG_LEVEL = LOG_INFO;
 
 // Fraction of moves that are clones. We use this to estimate the number of
