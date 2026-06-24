@@ -38,7 +38,7 @@ Move AlphaBetaAgent::iterativeDeepening() {
     millis = Time::checkClock();
     time -= millis;
     if (inTime) {
-      putMoveFirst(move);
+      putMoveFirst(move, 0);
       logStats(depth, score, millis);
     }
   } while ((score > -WIN_SCORE) && (score < WIN_SCORE) && haveTime());
@@ -115,7 +115,12 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     return b.finalEval();
   }
 
+  if ((rec.type == TT_EXACT) || (rec.type == TT_LOWER_BOUND)) {
+    putMoveFirst(rec.move, depth);
+  }
+
   u8 type = TT_UPPER_BOUND;
+  Move bestMove;
   for (int i = 0; i < moveGen.numMoves; i++) {
     Move m = moves[depth][i];
     Board new_b = b;
@@ -123,27 +128,28 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     int child = -alphaBeta(new_b, depth - 1, -beta, -alpha);
 
     if (child >= beta) {
-      tt.add(hash, child, depth, TT_LOWER_BOUND);
+      tt.add(hash, child, m, depth, TT_LOWER_BOUND);
       return beta;
     } else if (child > alpha) {
       type = TT_EXACT;
+      bestMove = m;
       alpha = child;
     }
   }
 
-  tt.add(hash, alpha, depth, type);
+  tt.add(hash, alpha, bestMove, depth, type);
   return alpha;
 }
 
-void AlphaBetaAgent::putMoveFirst(Move move) {
+void AlphaBetaAgent::putMoveFirst(Move move, int depth) {
   int i = 0;
-  while (moves[0][i] != move) {
+  while (moves[depth][i] != move) {
     i++;
   }
 
-  Move tmp = moves[0][0];
-  moves[0][0] = moves[0][i];
-  moves[0][i] = tmp;
+  Move tmp = moves[depth][0];
+  moves[depth][0] = moves[depth][i];
+  moves[depth][i] = tmp;
 }
 
 void AlphaBetaAgent::logStats(int depth, int score, int millis) {

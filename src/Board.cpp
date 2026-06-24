@@ -213,8 +213,8 @@ int Board::estimateRemainingMoves() {
 
 u64 Board::getHashCode() {
   return
-    pieces[0] * HASH1 +
-    pieces[1] * HASH2 +
-    empty * HASH3 +
-    side * HASH4;
+    (HASH1 * pieces[0] +
+     HASH2 * pieces[1] +
+     HASH3 * empty +
+     HASH4 * side) >> 32;
 }
