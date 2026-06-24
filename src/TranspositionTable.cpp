@@ -1,6 +1,11 @@
 #include "TranspositionTable.h"
 
+#include "Config.h"
+
 TranspositionRecord TranspositionTable::probe(u64 key) {
+  if (!USE_TRANSPOSITION_TABLES) {
+    return { .type = TT_UNKNOWN };
+  }
   auto it = map.find(key);
   if (it == map.end()) {
     return { .type = TT_UNKNOWN };
@@ -10,5 +15,7 @@ TranspositionRecord TranspositionTable::probe(u64 key) {
 }
 
 void TranspositionTable::add(u64 key, int score, u8 depth, u8 type) {
-  map[key] = { .score = score, .depth = depth, .type = type };
+  if (USE_TRANSPOSITION_TABLES) {
+    map[key] = { .score = score, .depth = depth, .type = type };
+  }
 }
