@@ -1,0 +1,74 @@
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        5.0      245
+dev_5      10        5.0      245
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_10     10        6.0      244
+stable     10        4.0      246
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        5.0      249
+dev_15     10        5.0      241
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_20     10        5.0      243
+stable     10        5.0      223
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_25     10        8.0      250
+stable     10        2.0      240
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_30     10        8.0      258
+stable     10        2.0      232
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        8.0      250
+dev_35     10        2.0      240
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_40     10        5.0      246
+stable     10        5.0      244
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        5.0      247
+dev_45     10        5.0      243
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_50     10        6.0      246
+stable     10        4.0      244
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_55     10        6.0      246
+stable     10        4.0      244
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_60     10        6.0      247
+stable     10        4.0      243
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+dev_65     10        7.0      251
+stable     10        3.0      239
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        6.0      251
+dev_70     10        4.0      239
+
+Nume    Partide    Puncte    Piese
+----------------------------------
+stable     10        7.0      246
+dev_75     10        3.0      244

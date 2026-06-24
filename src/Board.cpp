@@ -104,13 +104,14 @@ void Board::print() {
   }
   printBottomSeparatorLine();
   Log::debug("Side to move: %s⬤%s", AnsiColors::PIECE[side], AnsiColors::DEFAULT);
-  Log::debug("popcount %d/%d coefs %d/%d group %d/%d",
+  Log::debug("popcount %d/%d coefs %d/%d group %d/%d eval %d",
              __builtin_popcountll(pieces[side]),
              __builtin_popcountll(pieces[!side]),
              boardCoefs[side],
              boardCoefs[!side],
              groupEval(side),
-             groupEval(!side));
+             groupEval(!side),
+             eval());
 }
 
 void Board::printTopSeparatorLine() {
