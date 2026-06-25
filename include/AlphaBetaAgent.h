@@ -24,8 +24,7 @@ private:
   Move iterativeDeepening();
   bool haveTime();
   // Returns true iff it had enough time to complete.
-  bool alphaBetaWrapper(int depth, int numMoves, Move& move, int& score);
+  bool alphaBetaWrapper(int depth, int numMoves, short& move, int& score);
   int alphaBeta(Board b, int depth, int alpha, int beta);
-  void putMoveFirst(Move move, int depth);
   void logStats(int depth, int score, int millis);
 };

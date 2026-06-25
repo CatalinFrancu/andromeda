@@ -14,7 +14,7 @@ TranspositionRecord TranspositionTable::probe(u64 key) {
   }
 }
 
-void TranspositionTable::add(u64 key, int score, Move move, u8 depth, u8 type) {
+void TranspositionTable::add(u64 key, int score, short move, u8 depth, u8 type) {
   if (USE_TRANSPOSITION_TABLES) {
     map[key] = { .score = score, .move = move, .depth = depth, .type = type };
   }

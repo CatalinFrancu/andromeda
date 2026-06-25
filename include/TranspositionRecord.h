@@ -6,7 +6,7 @@
 class TranspositionRecord {
 public:
   int score;
-  Move move;
+  short move; // index in move list (assumes the move generator is consistent)
   u8 depth;
   u8 type;
 };
