@@ -215,6 +215,5 @@ u64 Board::getHashCode() {
   return
     (HASH1 * pieces[0] +
      HASH2 * pieces[1] +
-     HASH3 * empty +
-     HASH4 * side) >> 32;
+     HASH3 * side) >> 32;
 }

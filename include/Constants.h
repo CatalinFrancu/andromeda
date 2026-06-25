@@ -55,7 +55,6 @@ const int STRAT_ALPHA_BETA = 1;
 const u128 HASH1 = 0xce2d'8606'6491'af5cull;
 const u128 HASH2 = 0xfb5e'bf76'a2a6'3120ull;
 const u128 HASH3 = 0x71c8'203d'77eb'd4a4ull;
-const u128 HASH4 = 0x272f'1a00'9462'4efeull;
 
 // Transposition table constants.
 const int TT_UNKNOWN = 0;
