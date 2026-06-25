@@ -2,15 +2,18 @@
 
 #include "Board.h"
 #include "TranspositionRecord.h"
-#include <unordered_map>
 
 class TranspositionTable {
 public:
 
+  TranspositionTable();
   TranspositionRecord probe(u64 key);
   void add(u64 key, int score, short move, u8 depth, u8 type);
+  int evictions;
 
 private:
-  std::unordered_map<u64, TranspositionRecord> map;
+  TranspositionRecord* table;
+
+  int getIndex(u64 key);
 
 };

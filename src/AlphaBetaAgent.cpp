@@ -9,6 +9,7 @@
 AlphaBetaAgent::AlphaBetaAgent(Board* board, int time) {
   this->board = board;
   this->time = time;
+  posCount = moveCount = ttCutoffs = 0;
   Log::debug("Thinking for %d milliseconds", time);
 }
 
@@ -32,8 +33,6 @@ Move AlphaBetaAgent::iterativeDeepening() {
   // estimate that the next iteration would be too slow.
   do {
     prevMillis = millis;
-    prevPosCount = posCount;
-    posCount = moveCount = tt_cutoffs = 0;
     Time::startClock();
     bool inTime = alphaBetaWrapper(++depth, moveGen.numMoves, move, score);
     millis = Time::checkClock();
@@ -104,7 +103,7 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
       ((rec.type == TT_EXACT) ||
        ((rec.type == TT_LOWER_BOUND) && (rec.score >= beta)) ||
        ((rec.type == TT_UPPER_BOUND) && (rec.score < alpha)))) {
-    tt_cutoffs++;
+    ttCutoffs++;
     return rec.score;
   }
 
@@ -165,7 +164,7 @@ void AlphaBetaAgent::logStats(int depth, int score, int millis) {
   }
 
   Log::info("depth %d:    %d millis    score %s    %llu positions    %llu calls to movegen    %llu tt cutoffs",
-            depth, millis, s, posCount, moveCount, tt_cutoffs);
-  fprintf(stderr, "kibitz [%s] depth %d / score %s / %llu positions / %llu calls to movegen / %llu tt cutoffs\n",
-          ENGINE_NAME, depth, s, posCount, moveCount, tt_cutoffs);
+            depth, millis, s, posCount, moveCount, ttCutoffs);
+  fprintf(stderr, "kibitz [%s] depth %d / score %s / %llu positions / %llu calls to movegen / %llu tt cutoffs / %d tt evictions\n",
+          ENGINE_NAME, depth, s, posCount, moveCount, ttCutoffs, tt.evictions);
 }

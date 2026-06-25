@@ -15,9 +15,9 @@ private:
   TranspositionTable tt;
   int time; // time remaining for this move, in milliseconds
   int millis, prevMillis; // time used for the previous two iterations
-  u64 posCount, prevPosCount; // positions seen at the previous two iterations
+  u64 posCount;  // positions evaluated
   u64 moveCount; // number of calls to the move generator
-  u64 tt_cutoffs; // num cutoffs produced by the transposition table
+  u64 ttCutoffs; // num cutoffs produced by the transposition table
 
   Move moves[MAX_ALPHA_BETA_DEPTH + 1][MAX_MOVES];
 

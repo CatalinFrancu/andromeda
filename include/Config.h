@@ -17,3 +17,4 @@ const double FRACTION_CLONES = 0.65;
 const int STRATEGY = STRAT_ALPHA_BETA;
 
 const int USE_TRANSPOSITION_TABLES = true;
+const int TRANSPOSITION_TABLE_SIZE = 8 * 1024 * 1024;
