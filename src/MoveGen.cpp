@@ -80,6 +80,22 @@ void MoveGen::randomizeMoves() {
   std::shuffle(moves, moves + numMoves, Util::rng);
 }
 
+Move MoveGen::getRandomMove() {
+  int sumWeights = 0;
+  for (int i = 0; i < numMoves; i++) {
+    sumWeights += moves[i].getMonteCarloWeight();
+  }
+
+  int left = Util::rand(0, sumWeights - 1);
+  int i = 0;
+  while (left >= moves[i].getMonteCarloWeight()) {
+    left -= moves[i].getMonteCarloWeight();
+    i++;
+  }
+
+  return moves[i];
+}
+
 void MoveGen::pushMove(u8 type, u8 src, u8 dest) {
   Move& m = moves[numMoves++];
   m.type = type;

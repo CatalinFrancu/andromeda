@@ -196,6 +196,20 @@ int Board::finalEval() {
   }
 }
 
+MonteCarloScore Board::getMonteCarloScore() {
+  double p[2];
+  p[side] = __builtin_popcountll(pieces[side]);
+  p[!side] = __builtin_popcountll(pieces[!side]) + __builtin_popcountll(empty);
+
+  if (p[0] == p[1]) {
+    return MonteCarloScore(0.5, 0.5);
+  } else if (p[0] > p[1]) {
+    return MonteCarloScore(1.0, 0.0);
+  } else {
+    return MonteCarloScore(0.0, 1.0);
+  }
+}
+
 int Board::getNumPiecesToMove() {
   return __builtin_popcountll(pieces[side]);
 }

@@ -50,6 +50,7 @@ const bool ALLOW_JUMPS_OVER_CLONES = true;
 
 const int STRAT_RANDOM = 0;
 const int STRAT_ALPHA_BETA = 1;
+const int STRAT_MONTE_CARLO = 2;
 
 // Board hash code constants.
 const u128 HASH1 = 0xce2d'8606'6491'af5cull;
@@ -61,6 +62,12 @@ const int TT_UNKNOWN = 0;
 const int TT_EXACT = 1;
 const int TT_LOWER_BOUND = 2;
 const int TT_UPPER_BOUND = 3;
+
+// Monte Carlo Tree Search constants.
+const int MCTS_EXPLORATION_CONSTANT = 1.41;
+const int MCTS_ROLLOUTS_PER_NODE = 1;
+// Weights of M_CLONE and M_JUMP.
+const int MCTS_WEIGHTS[3] = { 0, 5, 1 };
 
 // Logging constants.
 const int LOG_FATAL = 0;

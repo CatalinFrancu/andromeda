@@ -2,6 +2,10 @@
 
 #include "Util.h"
 
+int Move::getMonteCarloWeight() {
+  return MCTS_WEIGHTS[type];
+}
+
 std::string Move::toString() {
   return (type == M_CLONE)
     ? Util::squareName(dest)

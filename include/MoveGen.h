@@ -12,6 +12,8 @@ public:
   MoveGen(Board* board, Move* moves);
   void run();
   void randomizeMoves(); // After generating them!
+  Move getRandomMove();
+
 
 private:
   u64 cloneMask; // squares where we can clone

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Constants.h"
+#include "MonteCarloScore.h"
 #include "Move.h"
 #include <string>
 
@@ -30,6 +31,9 @@ public:
 
   // Returns the score of a position known to be final (no moves).
   int finalEval();
+
+  // Returns the Monte Carlo scores (0.0 / 0.5 / 1.0) for a final board.
+  MonteCarloScore getMonteCarloScore();
 
   int getNumPiecesToMove();
   int getNumEmpty();

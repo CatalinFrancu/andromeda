@@ -2,6 +2,7 @@
 #include "Board.h"
 #include "Config.h"
 #include "Log.h"
+#include "MonteCarloAgent.h"
 #include "Move.h"
 #include "RandomAgent.h"
 
@@ -26,6 +27,9 @@ int main(int argc, char** argv) {
     m = agent.getMove();
   } else if (STRATEGY == STRAT_ALPHA_BETA) {
     AlphaBetaAgent agent(&board, my_time / remaining_moves);
+    m = agent.getMove();
+  } else if (STRATEGY == STRAT_MONTE_CARLO) {
+    MonteCarloAgent agent(&board, my_time / remaining_moves);
     m = agent.getMove();
   } else {
     Log::fatal("Unknown value STRATEGY = %d.", STRATEGY);
