@@ -27,7 +27,9 @@ Move AlphaBetaAgent::iterativeDeepening() {
   // choice from among equals.
   MoveGen moveGen(board, moves[0]);
   moveGen.run();
-  moveGen.randomizeMoves();
+  if (ALPHA_BETA_RANDOMIZE) {
+    moveGen.randomizeMoves();
+  }
 
   // Stop either when the current iteration exceeds the time or when we
   // estimate that the next iteration would be too slow.

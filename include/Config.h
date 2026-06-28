@@ -8,7 +8,7 @@
 
 const char ENGINE_NAME[100] = "andromeda";
 
-const int LOG_LEVEL = LOG_INFO;
+const int LOG_LEVEL = LOG_DEBUG;
 
 // Fraction of moves that are clones. We use this to estimate the number of
 // remaining moves, which dictates time management.
@@ -16,5 +16,6 @@ const double FRACTION_CLONES = 0.65;
 
 const int STRATEGY = STRAT_ALPHA_BETA;
 
+const int ALPHA_BETA_RANDOMIZE = true;
 const int USE_TRANSPOSITION_TABLES = true;
 const int TRANSPOSITION_TABLE_SIZE = 8 * 1024 * 1024;
