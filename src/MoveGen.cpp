@@ -1,5 +1,7 @@
 #include "MoveGen.h"
 
+#pragma GCC target("lzcnt")
+
 #include "Log.h"
 #include "Util.h"
 #include <algorithm>
@@ -50,11 +52,11 @@ void MoveGen::genJumps() {
 void MoveGen::genJumpsFromSrc() {
   u64 src = board->pieces[board->side];
   while (src) {
-    int sbit = __builtin_ctzll(src);
+    int sbit = 63 - __builtin_clzll(src);
     src ^= 1ll << sbit;
     u64 dest = Board::jumpDomains[sbit] & jumpMask;
     while (dest) {
-      int dbit = __builtin_ctzll(dest);
+      int dbit = 63 - __builtin_clzll(dest);
       dest ^= 1ll << dbit;
       pushMove(M_JUMP, sbit, dbit);
     }
@@ -65,11 +67,11 @@ void MoveGen::genJumpsFromSrc() {
 void MoveGen::genJumpsFromDest() {
   u64 dest = jumpMask;
   while (dest) {
-    int dbit = __builtin_ctzll(dest);
+    int dbit = 63 - __builtin_clzll(dest);
     dest ^= 1ll << dbit;
     u64 src = Board::jumpDomains[dbit] & board->pieces[board->side];
     while (src) {
-      int sbit = __builtin_ctzll(src);
+      int sbit = 63 - __builtin_clzll(src);
       src ^= 1ll << sbit;
       pushMove(M_JUMP, sbit, dbit);
     }
