@@ -233,7 +233,3 @@ int Board::estimateRemainingMoves() {
   int n = getNumEmpty() / (2 * FRACTION_CLONES);
   return (n < 1) ? 1 : n;
 }
-
-u64 Board::getHashCode() {
-  return hash;
-}

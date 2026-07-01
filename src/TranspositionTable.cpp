@@ -73,6 +73,11 @@ void TranspositionTable::add(u64 key, short score, short move, u8 depth, u8 type
   }
 }
 
+void TranspositionTable::prefetch(u64 key) {
+  int ind = getIndex(key);
+  __builtin_prefetch(table[ind]);
+}
+
 int TranspositionTable::getIndex(u64 key) {
   return key & (TRANSPOSITION_TABLE_SIZE - 1);
 }
