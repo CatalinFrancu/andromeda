@@ -118,7 +118,11 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
   }
 
   bool swapped = false;
-  if ((rec.type == TT_EXACT) || (rec.type == TT_LOWER_BOUND)) {
+  // Account for tt collisions, which can give us the transposition record for
+  // a different position. We'll get the ordering wrong, but at least we must
+  // not crash.
+  if (((rec.type == TT_EXACT) || (rec.type == TT_LOWER_BOUND)) &&
+      (rec.move < moveGen.numMoves)) {
     std::swap(moves[depth][0], moves[depth][rec.move]);
     swapped = true;
   }

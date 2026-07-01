@@ -15,5 +15,6 @@ private:
   TranspositionRecord* table;
 
   int getIndex(u64 key);
+  int getFingerprint(u64 key);
 
 };
