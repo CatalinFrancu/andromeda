@@ -34,7 +34,7 @@ const int BOARD_COEFS[BOARD_SIZE * BOARD_SIZE] = {
 
 // Base score for winning / losing a game. We add the piece difference on
 // top of this.
-const int WIN_SCORE = 1'000'000;
+const int WIN_SCORE = 32'000;
 
 // More than winning 49-0.
 const int INFTY = WIN_SCORE + BOARD_SIZE * BOARD_SIZE + 1;

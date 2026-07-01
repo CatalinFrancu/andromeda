@@ -8,7 +8,7 @@ public:
 
   TranspositionTable();
   TranspositionRecord probe(u64 key);
-  void add(u64 key, int score, short move, u8 depth, u8 type);
+  void add(u64 key, short score, short move, u8 depth, u8 type);
   int evictions;
 
 private:
