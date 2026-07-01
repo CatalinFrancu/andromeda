@@ -3,10 +3,12 @@
 #include "Config.h"
 
 TranspositionTable::TranspositionTable() {
-  table = new TranspositionRecord[TRANSPOSITION_TABLE_SIZE];
+  int size = TRANSPOSITION_TABLE_SIZE * TT_BUCKET * sizeof(TranspositionRecord);
+  table = (TranspositionRecord (*)[TT_BUCKET])malloc(size);
   for (int i = 0; i < TRANSPOSITION_TABLE_SIZE; i++) {
-    table[i].fingerprint = 0;
-    table[i].type = TT_UNKNOWN;
+    for (int j = 0; j < TT_BUCKET; j++) {
+      table[i][j].type = TT_UNKNOWN;
+    }
   }
   evictions = 0;
 }
@@ -16,14 +18,16 @@ TranspositionRecord TranspositionTable::probe(u64 key) {
     return { .type = TT_UNKNOWN };
   }
 
-  int i = getIndex(key);
+  int ind = getIndex(key);
   u16 fp = getFingerprint(key);
 
-  if (table[i].fingerprint == fp) {
-    return table[i];
-  } else {
-    return { .type = TT_UNKNOWN };
+  for (int i = 0; i < TT_BUCKET; i++) {
+    if (table[ind][i].fingerprint == fp) {
+      return table[ind][i];
+    }
   }
+
+  return { .type = TT_UNKNOWN };
 }
 
 void TranspositionTable::add(u64 key, short score, short move, u8 depth, u8 type) {
@@ -31,20 +35,41 @@ void TranspositionTable::add(u64 key, short score, short move, u8 depth, u8 type
     return;
   }
 
-  int i = getIndex(key);
+  int ind = getIndex(key);
   u16 fp = getFingerprint(key);
+  int min_i = -1;
+
+  TranspositionRecord rec = {
+    .fingerprint = fp,
+    .score = score,
+    .move = move,
+    .depth = depth,
+    .type = type,
+  };
 
   // This could be a collision because the table only has limited space.
   // Commit the data if there is no previous data or the new data is deeper.
-  if ((table[i].type == TT_UNKNOWN) || (depth >= table[i].depth)) {
-    evictions += (table[i].type != TT_UNKNOWN);
-    table[i] = {
-      .fingerprint = fp,
-      .score = score,
-      .move = move,
-      .depth = depth,
-      .type = type,
-    };
+  for (int i = 0; i < TT_BUCKET; i++) {
+    if (table[ind][i].type == TT_UNKNOWN) {
+      table[ind][i] = rec;
+      return;
+    }
+
+    if (table[ind][i].fingerprint == fp) {
+      if (depth >= table[ind][i].depth) {
+        table[ind][i] = rec;
+      }
+      return;
+    }
+
+    if ((min_i == -1) || (table[ind][i].depth < table[ind][min_i].depth)) {
+      min_i = i;
+    }
+  }
+
+  if (depth >= table[ind][min_i].depth) {
+    evictions++;
+    table[ind][min_i] = rec;
   }
 }
 

@@ -12,7 +12,7 @@ public:
   int evictions;
 
 private:
-  TranspositionRecord* table;
+  TranspositionRecord (*table)[TT_BUCKET];
 
   int getIndex(u64 key);
   int getFingerprint(u64 key);
