@@ -53,6 +53,7 @@ void Board::readFromStdin() {
   side = x;
 
   pieces[0] = pieces[1] = empty = 0;
+  hash = side ? ZOBRIST_SIDE : 0;
 
   for (int r = 0; r < BOARD_SIZE; r++) {
     for (int c = 0; c < BOARD_SIZE; c++) {
@@ -63,10 +64,12 @@ void Board::readFromStdin() {
         case 'x':
           pieces[0] |= mask;
           boardCoefs[0] += BOARD_COEFS[bit];
+          hash ^= ZOBRIST[0][bit];
           break;
         case 'o':
           pieces[1] |= mask;
           boardCoefs[1] += BOARD_COEFS[bit];
+          hash ^= ZOBRIST[1][bit];
           break;
         case '.':
           empty |= mask;
@@ -145,12 +148,14 @@ void Board::makeMove(Move m) {
     pieces[side] ^= 1ll << m.src;
     empty ^= 1ll << m.src;
     boardCoefs[side] -= BOARD_COEFS[m.src];
+    hash ^= ZOBRIST[side][m.src];
   }
 
   // Fill the destination.
   pieces[side] ^= 1ll << m.dest;
   empty ^= 1ll << m.dest;
   boardCoefs[side] += BOARD_COEFS[m.dest];
+  hash ^= ZOBRIST[side][m.dest];
 
   // Flip the neighbors.
   u64 opp_neighbors = pieces[!side] & cloneDomains[m.dest];
@@ -160,9 +165,11 @@ void Board::makeMove(Move m) {
     int sq = __builtin_ctzll(x);
     boardCoefs[!side] -= BOARD_COEFS[sq];
     boardCoefs[side] += BOARD_COEFS[sq];
+    hash ^= ZOBRIST[!side][sq] ^ ZOBRIST[side][sq];
   }
 
   side = !side;
+  hash ^= ZOBRIST_SIDE;
 }
 
 int Board::eval() {
@@ -228,8 +235,5 @@ int Board::estimateRemainingMoves() {
 }
 
 u64 Board::getHashCode() {
-  return
-    (HASH1 * pieces[0] +
-     HASH2 * pieces[1] +
-     HASH3 * side) >> 32;
+  return hash;
 }

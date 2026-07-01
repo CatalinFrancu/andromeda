@@ -16,6 +16,7 @@ public:
   u64 pieces[2];
   u64 empty;
   u64 boardCoefs[2]; // the sum of BOARD_COEFS for the red/blue pieces.
+  u64 hash;          // xor of Zobrist hash values
   bool side;
 
   static void precomputeDomains();
