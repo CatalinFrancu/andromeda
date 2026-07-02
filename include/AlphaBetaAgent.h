@@ -3,6 +3,7 @@
 #include "Board.h"
 #include "Constants.h"
 #include "Move.h"
+#include "TranspositionRecord.h"
 #include "TranspositionTable.h"
 
 class AlphaBetaAgent {
@@ -27,4 +28,9 @@ private:
   bool alphaBetaWrapper(int depth, int numMoves, short& move, int& score);
   int alphaBeta(Board b, int depth, int alpha, int beta);
   void logStats(int depth, int score, int millis);
+
+  TranspositionRecord ttProbe(u64 hash);
+  void ttPrefetch(u64 hash);
+  void ttAdd(u64 key, short score, short move, u8 depth, u8 type);
+  int ttEvictions();
 };

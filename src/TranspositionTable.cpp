@@ -10,10 +10,6 @@ TranspositionTable::TranspositionTable() {
 }
 
 TranspositionRecord TranspositionTable::probe(u64 key) {
-  if (!USE_TRANSPOSITION_TABLES) {
-    return { .type = TT_UNKNOWN };
-  }
-
   int ind = getIndex(key);
   u16 fp = getFingerprint(key);
 
@@ -27,10 +23,6 @@ TranspositionRecord TranspositionTable::probe(u64 key) {
 }
 
 void TranspositionTable::add(u64 key, short score, short move, u8 depth, u8 type) {
-  if (!USE_TRANSPOSITION_TABLES) {
-    return;
-  }
-
   int ind = getIndex(key);
   u16 fp = getFingerprint(key);
   int min_i = -1;

@@ -9,7 +9,11 @@
 AlphaBetaAgent::AlphaBetaAgent(Board* board, int time) {
   this->board = board;
   this->time = time;
-  this->tt = new TranspositionTable;
+  if (USE_TRANSPOSITION_TABLES && time >= 100) {
+    this->tt = new TranspositionTable();
+  } else {
+    this->tt = NULL;
+  }
   posCount = moveCount = ttCutoffs = 0;
   Log::debug("Thinking for %d milliseconds", time);
 }
@@ -72,7 +76,7 @@ bool AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, short& move, int&
   score = -INFTY;
 
   int i = 0;
-  while ((i < numMoves) && (Time::checkClock() < (unsigned)time)) {
+  while ((i < numMoves) && (Time::checkClock() <= (unsigned)time)) {
     Move m = moves[0][i];
     Board new_b = *board;
     new_b.makeMove(m);
@@ -100,7 +104,7 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     return b.eval();
   }
 
-  TranspositionRecord rec = tt->probe(b.hash);
+  TranspositionRecord rec = ttProbe(b.hash);
   if ((rec.depth >= depth) &&
       ((rec.type == TT_EXACT) ||
        ((rec.type == TT_LOWER_BOUND) && (rec.score >= beta)) ||
@@ -132,7 +136,7 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     Move m = moves[depth][i];
     new_b[i] = b;
     new_b[i].makeMove(m);
-    tt->prefetch(new_b[i].hash);
+    ttPrefetch(new_b[i].hash);
   }
 
   u8 type = TT_UPPER_BOUND;
@@ -147,7 +151,7 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     int child = -alphaBeta(new_b[j], depth - 1, -beta, -alpha);
 
     if (child >= beta) {
-      tt->add(b.hash, child, orig_i, depth, TT_LOWER_BOUND);
+      ttAdd(b.hash, child, orig_i, depth, TT_LOWER_BOUND);
       return beta;
     } else if (child > alpha) {
       type = TT_EXACT;
@@ -159,11 +163,11 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     if (i + TT_PREFETCH_MOVES < moveGen.numMoves) {
       new_b[j] = b;
       new_b[j].makeMove(moves[depth][i + TT_PREFETCH_MOVES]);
-      tt->prefetch(new_b[j].hash);
+      ttPrefetch(new_b[j].hash);
     }
   }
 
-  tt->add(b.hash, alpha, bestMove, depth, type);
+  ttAdd(b.hash, alpha, bestMove, depth, type);
   return alpha;
 }
 
@@ -185,5 +189,29 @@ void AlphaBetaAgent::logStats(int depth, int score, int millis) {
   Log::info("depth %d:    %d millis    score %s    %llu positions    %llu calls to movegen    %llu tt cutoffs",
             depth, millis, s, posCount, moveCount, ttCutoffs);
   fprintf(stderr, "kibitz [%s] depth %d / score %s / %llu positions / %llu calls to movegen / %llu tt cutoffs / %d tt evictions\n",
-          ENGINE_NAME, depth, s, posCount, moveCount, ttCutoffs, tt->evictions);
+          ENGINE_NAME, depth, s, posCount, moveCount, ttCutoffs, ttEvictions());
+}
+
+TranspositionRecord AlphaBetaAgent::ttProbe(u64 hash) {
+  if (tt) {
+    return tt->probe(hash);
+  } else {
+    return { .type = TT_UNKNOWN };
+  }
+}
+
+void AlphaBetaAgent::ttPrefetch(u64 hash) {
+  if (tt) {
+    tt->prefetch(hash);
+  }
+}
+
+void AlphaBetaAgent::ttAdd(u64 key, short score, short move, u8 depth, u8 type) {
+  if (tt) {
+    tt->add(key, score, move, depth, type);
+  }
+}
+
+int AlphaBetaAgent::ttEvictions() {
+  return tt ? tt->evictions : 0;
 }
