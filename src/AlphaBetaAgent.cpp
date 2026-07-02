@@ -14,7 +14,7 @@ AlphaBetaAgent::AlphaBetaAgent(Board* board, int time) {
   } else {
     this->tt = NULL;
   }
-  posCount = moveCount = ttCutoffs = 0;
+  posCount = 0;
   Log::debug("Thinking for %d milliseconds", time);
 }
 
@@ -109,13 +109,11 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
       ((rec.type == TT_EXACT) ||
        ((rec.type == TT_LOWER_BOUND) && (rec.score >= beta)) ||
        ((rec.type == TT_UPPER_BOUND) && (rec.score < alpha)))) {
-    ttCutoffs++;
     return rec.score;
   }
 
   MoveGen moveGen(&b, moves[depth]);
   moveGen.run();
-  moveCount++;
 
   if (!moveGen.numMoves) {
     return b.finalEval();
@@ -186,10 +184,10 @@ void AlphaBetaAgent::logStats(int depth, int score, int millis) {
     sprintf(s, "%d", score);
   }
 
-  Log::info("depth %d:    %d millis    score %s    %llu positions    %llu calls to movegen    %llu tt cutoffs",
-            depth, millis, s, posCount, moveCount, ttCutoffs);
-  fprintf(stderr, "kibitz [%s] depth %d / score %s / %llu positions / %llu calls to movegen / %llu tt cutoffs / %d tt evictions\n",
-          ENGINE_NAME, depth, s, posCount, moveCount, ttCutoffs, ttEvictions());
+  Log::info("depth %d:    %d millis    score %s    %llu positions",
+            depth, millis, s, posCount);
+  fprintf(stderr, "kibitz [%s] depth %d / score %s / %llu positions / %d tt evictions\n",
+          ENGINE_NAME, depth, s, posCount, ttEvictions());
 }
 
 TranspositionRecord AlphaBetaAgent::ttProbe(u64 hash) {
