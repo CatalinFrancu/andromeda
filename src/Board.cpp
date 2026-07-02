@@ -1,7 +1,5 @@
 #include "Board.h"
 
-#pragma GCC target("popcnt")
-
 #include "AnsiColors.h"
 #include "Config.h"
 #include "Log.h"

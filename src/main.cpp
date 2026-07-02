@@ -5,8 +5,10 @@
 #include "MonteCarloAgent.h"
 #include "Move.h"
 #include "RandomAgent.h"
+#include "Util.h"
 
 int main(int argc, char** argv) {
+  Util::precomputeMsb();
   Board::precomputeDomains();
 
   Board board;

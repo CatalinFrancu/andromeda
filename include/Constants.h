@@ -5,6 +5,8 @@
  * architecture and that the user should not mess with.
  **/
 
+#pragma GCC target("popcnt")
+
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned long long u64;
