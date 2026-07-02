@@ -1,7 +1,5 @@
 #include "MoveGen.h"
 
-#pragma GCC target("lzcnt")
-
 #include "Log.h"
 #include "Util.h"
 #include <algorithm>

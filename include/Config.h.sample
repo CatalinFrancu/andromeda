@@ -6,6 +6,11 @@
 
 #include "Constants.h"
 
+// These may be unsupported on your target architecture. You can comment them
+// out.
+#pragma GCC target("popcnt")
+#pragma GCC target("lzcnt")
+
 const char ENGINE_NAME[100] = "andromeda";
 
 const int LOG_LEVEL = LOG_DEBUG;
