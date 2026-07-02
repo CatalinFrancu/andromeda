@@ -9,6 +9,7 @@
 AlphaBetaAgent::AlphaBetaAgent(Board* board, int time) {
   this->board = board;
   this->time = time;
+  this->tt = new TranspositionTable;
   posCount = moveCount = ttCutoffs = 0;
   Log::debug("Thinking for %d milliseconds", time);
 }
@@ -99,7 +100,7 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     return b.eval();
   }
 
-  TranspositionRecord rec = tt.probe(b.hash);
+  TranspositionRecord rec = tt->probe(b.hash);
   if ((rec.depth >= depth) &&
       ((rec.type == TT_EXACT) ||
        ((rec.type == TT_LOWER_BOUND) && (rec.score >= beta)) ||
@@ -131,7 +132,7 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     Move m = moves[depth][i];
     new_b[i] = b;
     new_b[i].makeMove(m);
-    tt.prefetch(new_b[i].hash);
+    tt->prefetch(new_b[i].hash);
   }
 
   u8 type = TT_UPPER_BOUND;
@@ -146,7 +147,7 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     int child = -alphaBeta(new_b[j], depth - 1, -beta, -alpha);
 
     if (child >= beta) {
-      tt.add(b.hash, child, orig_i, depth, TT_LOWER_BOUND);
+      tt->add(b.hash, child, orig_i, depth, TT_LOWER_BOUND);
       return beta;
     } else if (child > alpha) {
       type = TT_EXACT;
@@ -158,11 +159,11 @@ int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
     if (i + TT_PREFETCH_MOVES < moveGen.numMoves) {
       new_b[j] = b;
       new_b[j].makeMove(moves[depth][i + TT_PREFETCH_MOVES]);
-      tt.prefetch(new_b[j].hash);
+      tt->prefetch(new_b[j].hash);
     }
   }
 
-  tt.add(b.hash, alpha, bestMove, depth, type);
+  tt->add(b.hash, alpha, bestMove, depth, type);
   return alpha;
 }
 
@@ -184,5 +185,5 @@ void AlphaBetaAgent::logStats(int depth, int score, int millis) {
   Log::info("depth %d:    %d millis    score %s    %llu positions    %llu calls to movegen    %llu tt cutoffs",
             depth, millis, s, posCount, moveCount, ttCutoffs);
   fprintf(stderr, "kibitz [%s] depth %d / score %s / %llu positions / %llu calls to movegen / %llu tt cutoffs / %d tt evictions\n",
-          ENGINE_NAME, depth, s, posCount, moveCount, ttCutoffs, tt.evictions);
+          ENGINE_NAME, depth, s, posCount, moveCount, ttCutoffs, tt->evictions);
 }

@@ -1,10 +1,6 @@
 #include "TranspositionTable.h"
 
-#include "Config.h"
-
 TranspositionTable::TranspositionTable() {
-  int size = TRANSPOSITION_TABLE_SIZE * TT_BUCKET * sizeof(TranspositionRecord);
-  table = (TranspositionRecord (*)[TT_BUCKET])malloc(size);
   for (int i = 0; i < TRANSPOSITION_TABLE_SIZE; i++) {
     for (int j = 0; j < TT_BUCKET; j++) {
       table[i][j].type = TT_UNKNOWN;

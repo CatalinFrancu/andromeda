@@ -12,7 +12,7 @@ public:
 
 private:
   Board* board;
-  TranspositionTable tt;
+  TranspositionTable* tt;
   int time; // time remaining for this move, in milliseconds
   int millis, prevMillis; // time used for the previous two iterations
   u64 posCount;  // positions evaluated

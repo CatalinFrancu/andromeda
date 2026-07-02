@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Board.h"
+#include "Config.h"
 #include "TranspositionRecord.h"
 
 class TranspositionTable {
@@ -13,7 +14,7 @@ public:
   int evictions;
 
 private:
-  TranspositionRecord (*table)[TT_BUCKET];
+  TranspositionRecord table[TRANSPOSITION_TABLE_SIZE][TT_BUCKET];
 
   int getIndex(u64 key);
   int getFingerprint(u64 key);
