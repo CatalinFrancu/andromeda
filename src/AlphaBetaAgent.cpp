@@ -74,6 +74,7 @@ bool AlphaBetaAgent::haveTime() {
 
 bool AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, short& move, int& score) {
   score = -INFTY;
+  posCount = 0;
 
   int i = 0;
   while ((i < numMoves) && (Time::checkClock() <= (unsigned)time)) {
@@ -214,8 +215,8 @@ void AlphaBetaAgent::logStats(int depth, int score, int millis) {
     sprintf(s, "%d", score);
   }
 
-  Log::info("depth %d:    %d millis    score %s    %llu positions",
-            depth, millis, s, posCount);
-  fprintf(stderr, "kibitz [%s] depth %d / score %s / %llu positions / %d tt evictions\n",
-          ENGINE_NAME, depth, s, posCount, ttEvictions());
+  int posPerSec = millis ? (posCount / millis / 1000) : 1;
+
+  fprintf(stderr, "kibitz [%s] depth %d / score %s / %d millis / %llu positions (%d M / sec) / %d tt evictions\n",
+          ENGINE_NAME, depth, s, millis, posCount, posPerSec, ttEvictions());
 }
