@@ -24,7 +24,7 @@ Move AlphaBetaAgent::getMove() {
 
   int millis = Time::getTimeMillis() - startTime;
   int posPerSec = millis ? (posCount / millis / 1000) : 1;
-  Log::info("Overall: %d millis / %llu positions (%d M / sec)\n",
+  Log::info("Overall: %d millis / %llu positions (%d M / sec)",
             millis, posCount, posPerSec);
 
   return move;
@@ -43,8 +43,6 @@ Move AlphaBetaAgent::iterativeDeepening() {
     moveGen.randomizeMoves();
   }
 
-  // Stop either when the current iteration exceeds the time or when we
-  // estimate that the next iteration would be too slow.
   do {
     alphaBetaWrapper(++depth, moveGen.numMoves, move, score);
     if (!Time::checkAlarm()) {
