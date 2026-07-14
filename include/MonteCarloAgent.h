@@ -12,8 +12,6 @@ public:
   Move getMove();
 
 private:
-  int time; // time remaining for this move, in milliseconds
-
   // info about the root and the current node
   Board rootBoard, board;
   MonteCarloNode *root, *node;

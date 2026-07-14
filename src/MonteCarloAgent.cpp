@@ -5,14 +5,13 @@
 #include "Time.h"
 
 MonteCarloAgent::MonteCarloAgent(Board* board, int time) {
+  Time::setAlarm(time);
   rootBoard = *board;
-  this->time = time;
   this->root = new MonteCarloNode(NULL);
 }
 
 Move MonteCarloAgent::getMove() {
-  Time::startClock();
-  while (Time::checkClock() < (unsigned)time) {
+  while (!Time::checkAlarm()) {
     select();
     expand();
     MonteCarloScore reward = simulate();

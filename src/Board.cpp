@@ -229,5 +229,7 @@ int Board::estimateRemainingMoves() {
   // Divide in 2 because the opponent can also create clones and drive the
   // game forward.
   int n = getNumEmpty() / (2 * FRACTION_CLONES);
-  return (n < 1) ? 1 : n;
+  int result = (n < 1) ? 1 : n;
+  Log::info("Estimated %d remaining moves", result);
+  return result;
 }

@@ -7,15 +7,16 @@
 #include "Util.h"
 
 AlphaBetaAgent::AlphaBetaAgent(Board* board, int time) {
+  Time::setAlarm(time);
   this->board = board;
-  this->time = time;
+  this->startTime = Time::getTimeMillis();
   if (USE_TRANSPOSITION_TABLES && time >= 100) {
     this->tt = new TranspositionTable();
   } else {
     this->tt = NULL;
   }
   posCount = 0;
-  Log::debug("Thinking for %d milliseconds", time);
+  Log::info("Thinking for %d milliseconds", time);
 }
 
 Move AlphaBetaAgent::getMove() {
@@ -39,45 +40,21 @@ Move AlphaBetaAgent::iterativeDeepening() {
   // Stop either when the current iteration exceeds the time or when we
   // estimate that the next iteration would be too slow.
   do {
-    prevMillis = millis;
-    Time::startClock();
-    bool inTime = alphaBetaWrapper(++depth, moveGen.numMoves, move, score);
-    millis = Time::checkClock();
-    time -= millis;
-    if (inTime) {
+    alphaBetaWrapper(++depth, moveGen.numMoves, move, score);
+    if (!Time::checkAlarm()) {
       std::swap(moves[0][0], moves[0][move]);
-      logStats(depth, score, millis);
+      logStats(depth, score);
     }
-  } while ((score > -WIN_SCORE) && (score < WIN_SCORE) && haveTime());
+  } while ((score > -WIN_SCORE) && (score < WIN_SCORE) && !Time::checkAlarm());
 
   return moves[0][0];
 }
 
-bool AlphaBetaAgent::haveTime() {
-  if (!prevMillis || !millis) {
-    return true;
-  }
-
-  if (time <= 0) {
-    return false;
-  }
-
-  // Extrapolate the duration of the next iteration. Be conservative as it may
-  // exceed our expectations.
-  u64 nextMillis = (u64)millis * millis / prevMillis;
-  Log::debug("%d millis remaining; previous 2 iterations took %d and %d millis",
-             time, prevMillis, millis);
-  Log::debug("Estimated that the next iteration would take %llu millis.",
-             nextMillis);
-  return (int)nextMillis <= time * 9 / 10;
-}
-
-bool AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, short& move, int& score) {
+void AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, short& move, int& score) {
   score = -INFTY;
-  posCount = 0;
 
   int i = 0;
-  while ((i < numMoves) && (Time::checkClock() <= (unsigned)time)) {
+  while ((i < numMoves) && !Time::checkAlarm()) {
     Move m = moves[0][i];
     Board new_b = *board;
     new_b.makeMove(m);
@@ -90,16 +67,13 @@ bool AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, short& move, int&
     }
     i++;
   }
-
-  if (i < numMoves) {
-    Log::notice("alpha-beta ran out of time mid-iteration");
-    return false;
-  } else {
-    return true;
-  }
 }
 
 int AlphaBetaAgent::alphaBeta(Board b, int depth, int alpha, int beta) {
+  if (Time::checkAlarm()) {
+    return 0;
+  }
+
   if (depth <= 0) {
     posCount++;
     return b.eval();
@@ -200,7 +174,7 @@ int AlphaBetaAgent::ttEvictions() {
   return tt ? tt->evictions : 0;
 }
 
-void AlphaBetaAgent::logStats(int depth, int score, int millis) {
+void AlphaBetaAgent::logStats(int depth, int score) {
   char s[100];
 
   if (score >= WIN_SCORE) {
@@ -215,6 +189,7 @@ void AlphaBetaAgent::logStats(int depth, int score, int millis) {
     sprintf(s, "%d", score);
   }
 
+  int millis = Time::getTimeMillis() - startTime;
   int posPerSec = millis ? (posCount / millis / 1000) : 1;
 
   fprintf(stderr, "kibitz [%s] depth %d / score %s / %d millis / %llu positions (%d M / sec) / %d tt evictions\n",

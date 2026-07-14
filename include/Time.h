@@ -4,13 +4,12 @@
 
 class Time {
 public:
-  static void startClock();
-
-  // returns the number of milliseconds elapsed since startClock()
-  static u64 checkClock();
+  static u64 getTimeMillis();
+  static void setAlarm(int millis);
+  static bool checkAlarm();
 
 private:
-  static u64 t0;
-
-  static u64 getTimeMillis();
+  static u64 endTime;
+  static int pollCnt;
+  static bool alarmWentOff;
 };

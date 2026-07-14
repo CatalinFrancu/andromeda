@@ -110,6 +110,10 @@ const int MCTS_ROLLOUTS_PER_NODE = 1;
 // Weights of M_CLONE and M_JUMP.
 const int MCTS_WEIGHTS[3] = { 0, 5, 1 };
 
+// Time measurement constants.
+// Only poll the clock every this many calls to the function.
+const int POLL_EVERY = 2048;
+
 // Logging constants.
 const int LOG_FATAL = 0;
 const int LOG_ERROR = 1;
