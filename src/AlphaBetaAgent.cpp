@@ -21,6 +21,12 @@ AlphaBetaAgent::AlphaBetaAgent(Board* board, int time) {
 
 Move AlphaBetaAgent::getMove() {
   Move move = iterativeDeepening();
+
+  int millis = Time::getTimeMillis() - startTime;
+  int posPerSec = millis ? (posCount / millis / 1000) : 1;
+  Log::info("Overall: %d millis / %llu positions (%d M / sec)\n",
+            millis, posCount, posPerSec);
+
   return move;
 }
 

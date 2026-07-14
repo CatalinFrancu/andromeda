@@ -101,5 +101,4 @@ void MoveGen::pushMove(u8 type, u8 src, u8 dest) {
   m.type = type;
   m.src = src;
   m.dest = dest;
-  // Log::debug("pushed move #%d %s", numMoves - 1, m.toString().c_str());
 }

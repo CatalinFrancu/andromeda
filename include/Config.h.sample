@@ -13,11 +13,11 @@
 
 const char ENGINE_NAME[100] = "andromeda";
 
-const int LOG_LEVEL = LOG_DEBUG;
+const int LOG_LEVEL = LOG_INFO;
 
 // Expected number of (half) moves in a game. We use this to estimate the
 // number of remaining moves, which dictates time management.
-const int GAME_MOVES = 100.0;
+const int GAME_MOVES = 140;
 
 const int STRATEGY = STRAT_ALPHA_BETA;
 
