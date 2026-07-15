@@ -39,9 +39,6 @@ const int WIN_SCORE = 32'000;
 // More than winning 49-0.
 const int INFTY = WIN_SCORE + BOARD_SIZE * BOARD_SIZE + 1;
 
-const int M_CLONE = 1;
-const int M_JUMP = 2;
-
 // Move generation constants.
 
 // Iff this is true, we allow jumps to destinations that we can also reach via
@@ -107,8 +104,8 @@ const int TT_PREFETCH_MOVES = 4;
 // Monte Carlo Tree Search constants.
 const int MCTS_EXPLORATION_CONSTANT = 1.41;
 const int MCTS_ROLLOUTS_PER_NODE = 1;
-// Weights of M_CLONE and M_JUMP.
-const int MCTS_WEIGHTS[3] = { 0, 5, 1 };
+const int MCTS_WEIGHT_CLONE = 5;
+const int MCTS_WEIGHT_JUMP = 1;
 
 // Time measurement constants.
 // Only poll the clock every this many calls to the function.

@@ -141,7 +141,7 @@ void Board::printSeparatorLine(const char* left, const char* center,
 }
 
 void Board::makeMove(Move m) {
-  if (m.type == M_JUMP) {
+  if (m.isJump()) {
     // Clear the source.
     pieces[side] ^= 1ll << m.src;
     empty ^= 1ll << m.src;

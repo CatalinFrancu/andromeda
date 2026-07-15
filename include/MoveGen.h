@@ -31,5 +31,5 @@ private:
   void genNextJumpFromSrc();
   void genNextJumpToDest();
 
-  void pushMove(u8 type, u8 src, u8 dest);
+  void pushMove(u8 src, u8 dest);
 };

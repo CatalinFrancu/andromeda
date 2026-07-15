@@ -55,7 +55,7 @@ void MoveGen::genNext() {
   if (cloneMask) {
     int bit = __builtin_ctzll(cloneMask);
     cloneMask ^= 1ll << bit;
-    pushMove(M_CLONE, 0, bit);
+    pushMove(bit, bit);
   } else if (board->getNumPiecesToMove() < board->getNumEmpty()) {
     genNextJumpFromSrc();
   } else {
@@ -74,7 +74,7 @@ void MoveGen::genNextJumpFromSrc() {
   if (neighborMask) {
     int bit = 63 - __builtin_clzll(neighborMask);
     neighborMask ^= 1ll << bit;
-    pushMove(M_JUMP, jbit, bit);
+    pushMove(jbit, bit);
   }
 }
 
@@ -89,7 +89,7 @@ void MoveGen::genNextJumpToDest() {
   if (neighborMask) {
     int bit = 63 - __builtin_clzll(neighborMask);
     neighborMask ^= 1ll << bit;
-    pushMove(M_JUMP, bit, jbit);
+    pushMove(bit, jbit);
   }
 }
 
@@ -113,9 +113,8 @@ Move MoveGen::getRandomMove() {
   return moves[i];
 }
 
-void MoveGen::pushMove(u8 type, u8 src, u8 dest) {
+void MoveGen::pushMove(u8 src, u8 dest) {
   Move& m = moves[numMoves++];
-  m.type = type;
   m.src = src;
   m.dest = dest;
 }
