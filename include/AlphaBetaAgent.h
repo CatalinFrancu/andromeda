@@ -3,6 +3,7 @@
 #include "Board.h"
 #include "Constants.h"
 #include "Move.h"
+#include "MoveGen.h"
 #include "TranspositionRecord.h"
 #include "TranspositionTable.h"
 
@@ -22,7 +23,7 @@ private:
   Move iterativeDeepening();
   void alphaBetaWrapper(int depth, int numMoves, short& move, int& score);
   int alphaBeta(Board b, int depth, int alpha, int beta);
-  bool bringBestMoveFirst(TranspositionRecord rec, int depth, int numMoves);
+  bool bringBestMoveFirst(TranspositionRecord rec, int depth, MoveGen* moveGen);
   void prefetchChild(Board& src, Move move, Board& dest);
   // Returns 0 when a = x, x when a = 0, a otherwise.
   int twiddle(int a, int x);

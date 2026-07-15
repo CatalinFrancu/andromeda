@@ -59,7 +59,7 @@ MonteCarloScore MonteCarloAgent::simulate() {
     bool anyMoves = true;
     while (anyMoves) {
       MoveGen gen(&b, moves);
-      gen.run();
+      gen.genAll();
       anyMoves = (gen.numMoves > 0);
       if (anyMoves) {
         Move move = gen.getRandomMove();

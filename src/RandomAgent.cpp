@@ -10,7 +10,7 @@ RandomAgent::RandomAgent(Board* board) {
 
 Move RandomAgent::getMove() {
   MoveGen moveGen(board, moves);
-  moveGen.run();
+  moveGen.genAll();
   int i = Util::rand(0, moveGen.numMoves - 1);
   return moveGen.moves[i];
 }

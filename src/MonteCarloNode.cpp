@@ -14,7 +14,7 @@ MonteCarloNode::MonteCarloNode(MonteCarloNode* parent) {
 
 bool MonteCarloNode::expand(Board* board, Move* moves) {
   MoveGen gen(board, moves);
-  gen.run();
+  gen.genAll();
 
   if (!gen.numMoves) {
     return false;
