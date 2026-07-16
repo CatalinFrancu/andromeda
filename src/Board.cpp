@@ -51,6 +51,7 @@ void Board::readFromStdin() {
   side = x;
 
   pieces[0] = pieces[1] = empty = 0;
+  boardCoefs[0] = boardCoefs[1] = 0;
   hash = side ? ZOBRIST_SIDE : 0;
 
   for (int r = 0; r < BOARD_SIZE; r++) {
@@ -62,11 +63,13 @@ void Board::readFromStdin() {
         case 'x':
           pieces[0] |= mask;
           boardCoefs[0] += BOARD_COEFS[bit];
+          pairs[0] += __builtin_popcountll(pieces[0] & cloneDomains[bit]);
           hash ^= ZOBRIST[0][bit];
           break;
         case 'o':
           pieces[1] |= mask;
           boardCoefs[1] += BOARD_COEFS[bit];
+          pairs[1] += __builtin_popcountll(pieces[1] & cloneDomains[bit]);
           hash ^= ZOBRIST[1][bit];
           break;
         case '.':
@@ -112,8 +115,8 @@ void Board::print() {
              __builtin_popcountll(pieces[!side]),
              boardCoefs[side],
              boardCoefs[!side],
-             groupEval(side),
-             groupEval(!side),
+             pairs[side],
+             pairs[!side],
              eval());
 }
 
@@ -146,6 +149,7 @@ void Board::makeMove(Move m) {
     pieces[side] ^= 1ll << m.src;
     empty ^= 1ll << m.src;
     boardCoefs[side] -= BOARD_COEFS[m.src];
+    pairs[side] -= __builtin_popcountll(pieces[side] & cloneDomains[m.src]);
     hash ^= ZOBRIST[side][m.src];
   }
 
@@ -153,6 +157,7 @@ void Board::makeMove(Move m) {
   pieces[side] ^= 1ll << m.dest;
   empty ^= 1ll << m.dest;
   boardCoefs[side] += BOARD_COEFS[m.dest];
+  pairs[side] += __builtin_popcountll(pieces[side] & cloneDomains[m.dest]);
   hash ^= ZOBRIST[side][m.dest];
 
   // Flip the neighbors.
@@ -163,6 +168,8 @@ void Board::makeMove(Move m) {
     int sq = __builtin_ctzll(x);
     boardCoefs[!side] -= BOARD_COEFS[sq];
     boardCoefs[side] += BOARD_COEFS[sq];
+    pairs[!side] -= __builtin_popcountll(pieces[!side] & cloneDomains[sq]);
+    pairs[side] += __builtin_popcountll(pieces[side] & cloneDomains[sq]);
     hash ^= ZOBRIST[!side][sq] ^ ZOBRIST[side][sq];
   }
 
@@ -175,19 +182,7 @@ int Board::eval() {
   return
     delta * POP_COEF +
     (boardCoefs[side] - boardCoefs[!side]) +
-    (groupEval(side) - groupEval(!side)) * GROUP_COEF;
-}
-
-int Board::groupEval(bool side) {
-  u64 m = pieces[side];
-
-  // There's no point in counting the same pair twice, so we only look for
-  // neighbors in four directions: W, NW, N and NE.
-  return
-    __builtin_popcountll(m & ((m & ~LEFT_COL) >> 1)) +
-    __builtin_popcountll(m & ((m & ~TOP_ROW & ~LEFT_COL) >> (BOARD_SIZE + 1))) +
-    __builtin_popcountll(m & ((m & ~TOP_ROW) >> BOARD_SIZE)) +
-    __builtin_popcountll(m & ((m & ~TOP_ROW & ~RIGHT_COL) >> (BOARD_SIZE - 1)));
+    (pairs[side] - pairs[!side]) * GROUP_COEF;
 }
 
 int Board::finalEval() {

@@ -15,8 +15,9 @@ public:
 
   u64 pieces[2];
   u64 empty;
-  u64 hash;          // xor of Zobrist hash values
+  u64 hash;            // xor of Zobrist hash values
   short boardCoefs[2]; // the sum of BOARD_COEFS for the red/blue pieces.
+  short pairs[2];      // number of pairs of neighboring pieces
   bool side;
 
   static void precomputeDomains();
@@ -26,9 +27,6 @@ public:
 
   void makeMove(Move m);
   int eval();
-
-  // Counts the pairs of adjacent pieces of a given player.
-  int groupEval(bool side);
 
   // Returns the score of a position known to be final (no moves).
   int finalEval();
