@@ -64,7 +64,7 @@ void AlphaBetaAgent::alphaBetaWrapper(int depth, int numMoves, short& move, int&
     int child = -alphaBeta(new_b, depth - 1, -INFTY, -score);
     Log::debug("Move %s has score %d at depth %d",
                m.toString().c_str(), child, depth - 1);
-    if (child > score) {
+    if (!Time::checkAlarm() && (child > score)) {
       score = child;
       move = i;
     }

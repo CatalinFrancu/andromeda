@@ -171,11 +171,15 @@ void Board::makeMove(Move m) {
 }
 
 int Board::eval() {
+  // Dampen the board / group coefficients to zero as the board fills up.
   int delta = __builtin_popcountll(pieces[side]) - __builtin_popcountll(pieces[!side]);
+  int e = __builtin_popcountll(empty);
+  int boardGroupCoefs =
+    ((int)boardCoefs[side] - boardCoefs[!side]) +
+    ((int)groupEval(side) - groupEval(!side)) * GROUP_COEF;
   return
     delta * POP_COEF +
-    (boardCoefs[side] - boardCoefs[!side]) +
-    (groupEval(side) - groupEval(!side)) * GROUP_COEF;
+    boardGroupCoefs * e / INIT_EMPTY;
 }
 
 int Board::groupEval(bool side) {
