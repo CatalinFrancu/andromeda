@@ -179,7 +179,7 @@ int Board::eval() {
     ((int)groupEval(side) - groupEval(!side)) * GROUP_COEF;
   return
     delta * POP_COEF +
-    boardGroupCoefs * e / INIT_EMPTY;
+    boardGroupCoefs * (INIT_EMPTY + e) / (2 * INIT_EMPTY);
 }
 
 int Board::groupEval(bool side) {
