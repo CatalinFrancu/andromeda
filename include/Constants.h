@@ -102,8 +102,8 @@ const int TT_EXACT = 1;
 const int TT_LOWER_BOUND = 2;
 const int TT_UPPER_BOUND = 3;
 
-const int TT_BUCKET = 3;
-const int TT_PREFETCH_MOVES = 4;
+const int TT_BUCKET = 4;
+const int TT_PREFETCH_MOVES = 2;
 
 // Monte Carlo Tree Search constants.
 const int MCTS_EXPLORATION_CONSTANT = 1.41;

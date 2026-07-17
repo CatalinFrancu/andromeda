@@ -17,6 +17,9 @@ int main(int argc, char** argv) {
   scanf("%d %d", &time[0], &time[1]);
   int my_time = time[board.side];
   int remaining_moves = board.estimateRemainingMoves();
+
+  Log::info("Transposition table: size=%dM bucket=%d prefetch=%d",
+             TRANSPOSITION_TABLE_SIZE >> 20, TT_BUCKET, TT_PREFETCH_MOVES);
   Log::debug("Time: %d milliseconds for an estimated %d moves.",
              my_time, remaining_moves);
 
